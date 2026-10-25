@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English 7 Pro | Trang chủ</title>
+  <style>
+    :root {
+      --navy: #173b6c;
+      --blue: #2563eb;
+      --sky: #eaf3ff;
+      --ink: #1e293b;
+      --muted: #64748b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(135deg, #e0f2fe 0%, #f8fafc 45%, #dbeafe 100%);
+    }
+
+    main { max-width: 1060px; margin: 0 auto; padding: 72px 24px; }
+
+    .hero { text-align: center; margin-bottom: 42px; }
+    .badge {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    h1 { margin: 16px 0 10px; color: var(--navy); font-size: clamp(2rem, 5vw, 3.4rem); }
+    .hero p { max-width: 620px; margin: auto; color: var(--muted); font-size: 1.08rem; }
+
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .card {
+      display: flex;
+      flex-direction: column;
+      min-height: 268px;
+      padding: 28px;
+      border: 1px solid rgba(148, 163, 184, .28);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 12px 30px rgba(30, 64, 175, .10);
+    }
+    .icon { font-size: 2.35rem; }
+    h2 { margin: 18px 0 10px; color: var(--navy); font-size: 1.3rem; }
+    .card p { flex: 1; margin: 0 0 24px; color: var(--muted); line-height: 1.55; }
+    .start {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      border-radius: 10px;
+      background: var(--blue);
+      color: white;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform .18s ease, background .18s ease;
+    }
+    .start:hover, .start:focus-visible { background: #1d4ed8; transform: translateY(-2px); }
+    .start:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+
+    footer { margin-top: 42px; text-align: center; color: var(--muted); font-size: .9rem; }
+    @media (max-width: 760px) {
+      main { padding: 48px 18px; }
+      .cards { grid-template-columns: 1fr; }
+      .card { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <span class="badge">GLOBAL SUCCESS</span>
+      <h1>ENGLISH 7 PRO</h1>
+      <p>Chọn nội dung bạn muốn luyện tập để ôn Tiếng Anh lớp 7.</p>
+    </section>
+
+    <section class="cards" aria-label="Danh sách bài luyện">
+      <article class="card">
+        <div class="icon" aria-hidden="true">🧩</div>
+        <h2>Grammar Practice</h2>
+        <p>Luyện tập ngữ pháp theo Unit với chế độ luyện tập và kiểm tra.</p>
+        <a class="start" href="GRAMMAR_PRACTICE_PRO_LOP7.html">Vào luyện ngữ pháp →</a>
+      </article>
+
+      <article class="card">
+        <div class="icon" aria-hidden="true">🔊</div>
+        <h2>Pronunciation Practice</h2>
+        <p>Rèn phát âm, trọng âm và ngữ điệu cho chương trình Tiếng Anh 7.</p>
+        <a class="start" href="PRONUNCIATION_PRACTICE_PRO_LOP7.html">Vào luyện phát âm →</a>
+      </article>
+
+      <article class="card">
+        <div class="icon" aria-hidden="true">📝</div>
+        <h2>Ôn thi giữa kì I</h2>
+        <p>Làm 110 câu hỏi ôn tập Tiếng Anh 7 Global Success.</p>
+        <a class="start" href="DE%20THI%20GK1%20LOP%207.html">Vào đề ôn tập →</a>
+      </article>
+    </section>
+
+    <footer>English 7 Pro · Global Success</footer>
+  </main>
+</body>
+</html>
