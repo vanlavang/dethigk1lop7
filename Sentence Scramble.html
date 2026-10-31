@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sentence Scramble | Luyện sắp xếp câu Tiếng Anh 7</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Thư viện hiệu ứng pháo hoa -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    @font-face {
+      font-family: 'UTM Avo';
+      src: url('fonts/utm-avo.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'UTM Avo', 'Roboto', Arial, sans-serif;
+      margin: 0;
+      background-color: #f0e2cd;
+      padding-top: 15px;
+      padding-bottom: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      color: #2c3e50;
+    }
+
+    /* Thanh điều hướng trên cùng */
+    .top-nav {
+      width: 95%;
+      max-width: 1200px;
+      margin: 0 auto 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #8b5e3c;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .home-link:hover {
+      background: #704729;
+      transform: translateY(-1px);
+    }
+
+    /* Bộ lọc chủ đề */
+    .topic-selector-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fffaf2;
+      border: 2px solid #e6ccb2;
+      border-radius: 8px;
+      padding: 4px 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .topic-selector-wrapper label {
+      font-weight: 700;
+      font-size: 13px;
+      color: #8b5e3c;
+      white-space: nowrap;
+    }
+
+    .topic-select {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #c9a77b;
+      background: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: #2c3e50;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .container {
+      background: #fffaf2;
+      margin: 0 auto;
+      padding: 24px 20px 20px;
+      width: 95%;
+      max-width: 1200px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      border-radius: 14px;
+      text-align: center;
+      border: 2px solid #e6ccb2;
+      position: relative;
+    }
+
+    .title-header {
+      font-size: clamp(24px, 4vw, 32px);
+      color: #8b5e3c;
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .subtitle-badge {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      background: #edd5bd;
+      color: #6d4527;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    /* Nút hỗ trợ nhanh: Nghe & Dịch */
+    .quick-tools {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .btn-quick {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #c9a77b;
+      background: #ffffff;
+      color: #8b5e3c;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+    .btn-quick:hover {
+      background: #e6ccb2;
+      transform: translateY(-1px);
+    }
+    .btn-quick:active {
+      transform: scale(0.96);
+    }
+
+    /* Khu vực thả từ và ngân hàng từ */
+    #drop-area, #word-bank {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 12px auto;
+      min-height: 105px;
+      padding: 16px;
+      width: 100%;
+      border: 2px dashed #c9a77b;
+      border-radius: 12px;
+      background-color: #fefaf3;
+      gap: 10px;
+      transition: border-color 0.2s;
+    }
+
+    #drop-area {
+      border: 2px solid #8b5e3c;
+      background-color: #fff;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .drop-empty-hint {
+      color: #a08468;
+      font-style: italic;
+      font-size: 16px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .word {
+      background: #ffffff;
+      border: 2px solid #333;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: clamp(20px, 3.5vw, 30px);
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .word:hover { 
+      background: #f1f1f1; 
+      transform: translateY(-2px);
+    }
+    
+    .word:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .word.used { 
+      background: #e0e0e0; 
+      color: #a0a0a0; 
+      border-color: #ccc;
+      pointer-events: none; 
+      box-shadow: none;
+    }
+
+    #result {
+      font-size: clamp(20px, 3vw, 24px);
+      font-weight: bold;
+      margin-top: 18px;
+      min-height: 36px;
+      line-height: 1.5;
+    }
+
+    .score-summary {
+      margin-top: 20px;
+      font-size: clamp(18px, 2.5vw, 22px);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Thanh công cụ cố định bên dưới (Bottom Toolbar) */
+    .footer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #f3dbc1;
+      border-top: 3px solid #d4bfa6;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 10px;
+      z-index: 1000;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
+    }
+
+    .footer-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer-label {
+      font-weight: bold;
+      color: #555;
+      font-size: 15px;
+    }
+
+    #timer, #current-question, #total-question {
+      font-weight: bold;
+      font-size: 18px;
+      color: #2c3e50;
+    }
+
+    .footer-bar button {
+      padding: 11px 18px;
+      background-color: #ffffff;
+      color: #8b5e3c;
+      border: 2px solid #c9a77b;
+      border-radius: 8px;
+      font-size: clamp(13px, 1.8vw, 15px);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .footer-bar button:hover {
+      background-color: #e6ccb2;
+    }
+    
+    .footer-bar button:active {
+      transform: scale(0.95);
+    }
+
+    .footer-bar button.btn-check {
+      background-color: #8b5e3c;
+      color: #fff;
+      border-color: #5c3a21;
+    }
+    .footer-bar button.btn-check:hover {
+      background-color: #724c30;
+    }
+
+    .btn-speed-active {
+      background-color: #ffcc80 !important;
+      color: #333 !important;
+      border-color: #e65100 !important;
+    }
+
+    /* Popup dịch nghĩa */
+    #trans-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ffffff;
+      border: 4px solid #c9a77b;
+      padding: 35px 25px;
+      border-radius: 20px;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+      z-index: 10001;
+      text-align: center;
+      width: 90%;
+      max-width: 620px;
+      animation: fadeIn 0.25s ease;
+      cursor: pointer;
+    }
+
+    #close-popup {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 32px;
+      font-weight: bold;
+      color: #c9a77b;
+      cursor: pointer;
+    }
+
+    #trans-source {
+      font-size: 14px;
+      color: #8b5e3c;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    #trans-text {
+      font-size: clamp(20px, 3.8vw, 28px);
+      font-weight: bold;
+      color: #2c3e50;
+      line-height: 1.45;
+    }
+
+    #trans-en {
+      margin-top: 12px;
+      font-size: clamp(16px, 2.8vw, 20px);
+      color: #64748b;
+      font-style: italic;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -55%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    @media (max-width: 768px) {
+      .top-nav { justify-content: center; }
+      .topic-selector-wrapper { width: 100%; justify-content: center; }
+      .topic-select { max-width: 280px; }
+    }
+
+    @media (max-width: 600px) {
+      .footer-bar { padding: 8px 4px; gap: 6px; }
+      .footer-bar button { padding: 8px 10px; font-size: 13px; }
+      .footer-section { width: 100%; justify-content: space-evenly; }
+      .hide-on-mobile { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Thanh điều hướng và chọn bộ câu hỏi -->
+  <header class="top-nav">
+    <a href="index.html" class="home-link">🏠 Trang chủ English 7</a>
+    
+    <div class="topic-selector-wrapper">
+      <label for="topic-select">📚 Chọn bộ câu:</label>
+      <select id="topic-select" class="topic-select" onchange="changeTopic(this.value)">
+        <option value="gk1_p10" selected>⭐ Đề GK1: Phần 10 - Sắp xếp câu (8 câu)</option>
+        <option value="gk1_p9">📝 Đề GK1: Phần 9 - Viết lại câu (10 câu)</option>
+        <option value="gk1_p2">💡 Đề GK1: Phần 2 - Ngữ pháp cốt lõi (30 câu)</option>
+        <option value="gk1_all">🏆 Toàn bộ Đề thi GK1 (57 câu)</option>
+        <option value="unit_1">🌿 Unit 1: Hobbies (40 câu)</option>
+        <option value="unit_2">🍎 Unit 2: Healthy Living (40 câu)</option>
+        <option value="unit_3">🤝 Unit 3: Community Service (40 câu)</option>
+        <option value="review_1">📖 Review 1: Ôn tập Unit 1-2-3 (40 câu)</option>
+        <option value="random_10">🎲 Thử thách ngẫu nhiên 10 câu</option>
+        <option value="all">🌟 Tất cả các câu (217 câu)</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="title-header">🧩 Sentence Scramble</div>
+    <div class="subtitle-badge" id="category-badge">Đề GK1: Phần 10 - Sắp xếp câu</div>
+
+    <div class="quick-tools">
+      <button class="btn-quick" onclick="playSentenceAudio(currentIndex)" title="Nghe phát âm chuẩn cả câu từ file MP3">
+        🔊 Nghe câu
+      </button>
+      <button class="btn-quick" onclick="showTranslation(event)" title="Xem bản dịch nghĩa tiếng Việt chi tiết">
+        🇻🇳 Dịch nghĩa
+      </button>
+    </div>
+
+    <!-- Khu vực thả từ đã chọn -->
+    <div id="drop-area" oncontextmenu="showTranslation(event)">
+      <div class="drop-empty-hint">Chạm hoặc click từ bên dưới để ghép vào đây...</div>
+    </div>
+
+    <!-- Ngân hàng từ xáo trộn -->
+    <div id="word-bank" oncontextmenu="playFullSentence(event)"></div>
+
+    <div id="result"></div>
+    <div class="score-summary" id="summary"></div>
+  </div>
+
+  <!-- Popup hiển thị nghĩa tiếng Việt -->
+  <div id="trans-popup" onclick="this.style.display='none'">
+    <span id="close-popup">&times;</span>
+    <div id="trans-source"></div>
+    <h3 style="margin-top:0; color:#8b5e3c; margin-bottom:10px;">Dịch nghĩa Tiếng Việt</h3>
+    <div id="trans-text"></div>
+    <div id="trans-en"></div>
+  </div>
+
+  <!-- Thanh công cụ điều hướng dưới chân màn hình -->
+  <div class="footer-bar">
+    <div class="footer-section">
+      <span class="footer-label">Câu:</span>
+      <span id="current-question">1</span> / <span id="total-question">8</span>
+      <span style="margin: 0 8px; color: #ccc;">|</span>
+      <span class="footer-label">⏱️</span> <span id="timer">0</span>s
+    </div>
+
+    <div class="footer-section">
+      <button id="speed-btn" onclick="toggleSpeed()">Tốc độ: 1x</button>
+      <button onclick="undo()">Hoàn tác</button>
+      <button onclick="showHint()">Gợi ý</button>
+      <button onclick="restart()">Chơi lại</button>
+      <button class="btn-check" onclick="checkOrNext()" id="main-action-btn">Kiểm tra</button>
+    </div>
+  </div>
+
+<script>
+// Toàn bộ dữ liệu 217 câu hỏi trích xuất từ sounds/ và sounds/grammar/
+const MASTER_SENTENCES = [{"id": "q11", "audio": "sounds/q11.mp3", "text": "They spend 1 hour surfing the Internet.", "vi": "Họ dành 1 giờ để lướt Internet.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 11"}, {"id": "q12", "audio": "sounds/q12.mp3", "text": "We don't want to play the game any more.", "vi": "Chúng tôi không muốn chơi trò chơi này nữa.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 12"}, {"id": "q13", "audio": "sounds/q13.mp3", "text": "He likes collecting stamps.", "vi": "Cậu ấy thích sưu tầm tem.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 13"}, {"id": "q14", "audio": "sounds/q14.mp3", "text": "She finds bird-watching exciting.", "vi": "Cô ấy thấy việc ngắm chim rất thú vị.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 14"}, {"id": "q15", "audio": "sounds/q15.mp3", "text": "Jack was making pottery yesterday morning.", "vi": "Jack đang làm đồ gốm vào sáng hôm qua.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 15"}, {"id": "q16", "audio": "sounds/q16.mp3", "text": "I help my mum plant vegetables in my free time.", "vi": "Tôi giúp mẹ trồng rau vào thời gian rảnh rỗi.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 16"}, {"id": "q17", "audio": "sounds/q17.mp3", "text": "His mum usually gardens whenever she has free time.", "vi": "Mẹ của anh ấy thường làm vườn bất cứ khi nào bà ấy có thời gian rảnh.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 17"}, {"id": "q18", "audio": "sounds/q18.mp3", "text": "Carving eggs is interesting.", "vi": "Khắc vỏ trứng rất thú vị.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 18"}, {"id": "q19", "audio": "sounds/q19.mp3", "text": "What do you think about carving wood?", "vi": "Bạn nghĩ gì về việc điêu khắc gỗ?", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 19"}, {"id": "q20", "audio": "sounds/q20.mp3", "text": "My sister rode a bike yesterday.", "vi": "Chị gái tôi đã đạp xe ngày hôm qua.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 20"}, {"id": "q21", "audio": "sounds/q21.mp3", "text": "Most children love fast food and soft drinks.", "vi": "Hầu hết trẻ em đều thích thức ăn nhanh và đồ uống có ga.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 21"}, {"id": "q22", "audio": "sounds/q22.mp3", "text": "He doesn't read science books.", "vi": "Cậu ấy không đọc sách khoa học.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 22"}, {"id": "q23", "audio": "sounds/q23.mp3", "text": "My sister rarely drinks orange juice.", "vi": "Chị gái tôi hiếm khi uống nước cam.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 23"}, {"id": "q24", "audio": "sounds/q24.mp3", "text": "They went to Paris two weeks ago.", "vi": "Họ đã đến Paris hai tuần trước.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 24"}, {"id": "q25", "audio": "sounds/q25.mp3", "text": "Jack spends a lot of money on junk food every day.", "vi": "Jack tiêu rất nhiều tiền vào đồ ăn vặt mỗi ngày.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 25"}, {"id": "q26", "audio": "sounds/q26.mp3", "text": "My parents go running every Sunday.", "vi": "Bố mẹ tôi đi chạy bộ vào mỗi Chủ nhật.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 26"}, {"id": "q27", "audio": "sounds/q27.mp3", "text": "She jogs every day to keep fit.", "vi": "Cô ấy chạy bộ mỗi ngày để giữ dáng.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 27"}, {"id": "q28", "audio": "sounds/q28.mp3", "text": "Eating much fast food is not good for your health.", "vi": "Ăn nhiều đồ ăn nhanh không tốt cho sức khỏe của bạn.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 28"}, {"id": "q29", "audio": "sounds/q29.mp3", "text": "You will get sunburn if you spend too much time in the sun.", "vi": "Bạn sẽ bị cháy nắng nếu ở ngoài nắng quá nhiều thời gian.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 29"}, {"id": "q30", "audio": "sounds/q30.mp3", "text": "I like outdoor activities such as boating and cycling.", "vi": "Tôi thích các hoạt động ngoài trời như chèo thuyền và đạp xe.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 30"}, {"id": "q31", "audio": "sounds/q31.mp3", "text": "Mike is an orphan. His parents died when he was a baby.", "vi": "Mike là trẻ mồ côi. Bố mẹ cậu ấy mất khi cậu còn bé.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 31"}, {"id": "q32", "audio": "sounds/q32.mp3", "text": "He works as a volunteer. He doesn't get salary.", "vi": "Anh ấy làm tình nguyện viên. Anh ấy không nhận lương.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 32"}, {"id": "q33", "audio": "sounds/q33.mp3", "text": "Children collected plastic bottles for recycling.", "vi": "Trẻ em đã thu gom các chai nhựa để tái chế.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 33"}, {"id": "q34", "audio": "sounds/q34.mp3", "text": "I like community activities such as planting trees and cleaning in the park.", "vi": "Tôi thích các hoạt động cộng đồng như trồng cây và dọn vệ sinh công viên.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 34"}, {"id": "q35", "audio": "sounds/q35.mp3", "text": "Shall they throw the waste paper away, or do they recycle?", "vi": "Họ vứt giấy vụn đi hay họ đem đi tái chế?", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 35"}, {"id": "q36", "audio": "sounds/q36.mp3", "text": "My sister planted lots of flowers on the balcony.", "vi": "Chị gái tôi đã trồng rất nhiều hoa ở ban công.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 36"}, {"id": "q37", "audio": "sounds/q37.mp3", "text": "His uncle bought a new house in the suburb.", "vi": "Chú của anh ấy đã mua một ngôi nhà mới ở ngoại ô.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 37"}, {"id": "q38", "audio": "sounds/q38.mp3", "text": "Where were they last weekend?", "vi": "Cuối tuần trước họ đã ở đâu?", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 38"}, {"id": "q39", "audio": "sounds/q39.mp3", "text": "My mother didn't go to work this morning.", "vi": "Mẹ tôi đã không đi làm sáng nay.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 39"}, {"id": "q40", "audio": "sounds/q40.mp3", "text": "The film that I saw last night was very interesting.", "vi": "Bộ phim mà tôi xem tối qua rất thú vị.", "group": "gk1", "subgroup": "gk1_p2", "source": "Đề GK1 - Câu 40"}, {"id": "q46", "audio": "sounds/q46.mp3", "text": "No photography and no video recording.", "vi": "Không chụp ảnh và không quay video.", "group": "gk1", "subgroup": "gk1_p4", "source": "Đề GK1 - Câu 46"}, {"id": "q47", "audio": "sounds/q47.mp3", "text": "You cannot eat or drink here.", "vi": "Bạn không được ăn hoặc uống ở đây.", "group": "gk1", "subgroup": "gk1_p4", "source": "Đề GK1 - Câu 47"}, {"id": "q48", "audio": "sounds/q48.mp3", "text": "picking up litter.", "vi": "Bạn phải chú ý quan sát trẻ em chơi đùa.", "group": "gk1", "subgroup": "gk1_p4", "source": "Đề GK1 - Câu 48"}, {"id": "q49", "audio": "sounds/q49.mp3", "text": "donating clothes.", "vi": "Bạn nên đội mũ bảo hiểm khi đi xe đạp.", "group": "gk1", "subgroup": "gk1_p4", "source": "Đề GK1 - Câu 49"}, {"id": "q58", "audio": "sounds/q58.mp3", "text": "What do you like doing best (1) in your spare time?", "vi": "Bạn thích làm điều gì nhất vào thời gian rảnh rỗi?", "group": "gk1", "subgroup": "gk1_p6", "source": "Đề GK1 - Câu 58"}, {"id": "q59", "audio": "sounds/q59.mp3", "text": "My cousin Henry likes going for walks in the country and (2) taking photos.", "vi": "Anh họ tôi Henry thích đi dạo ở vùng quê và chụp ảnh.", "group": "gk1", "subgroup": "gk1_p6", "source": "Đề GK1 - Câu 59"}, {"id": "q60", "audio": "sounds/q60.mp3", "text": "Sometimes he (3) goes out with his friends...", "vi": "Nhiều người thích sưu tầm tem hoặc tiền xu cổ.", "group": "gk1", "subgroup": "gk1_p6", "source": "Đề GK1 - Câu 60"}, {"id": "q61", "audio": "sounds/q61.mp3", "text": "...and they (4) have fun at the park or at the beach.", "vi": "Cô ấy thích làm đồ thủ công từ các vật liệu tái chế.", "group": "gk1", "subgroup": "gk1_p6", "source": "Đề GK1 - Câu 61"}, {"id": "q62", "audio": "sounds/q62.mp3", "text": "They always (5) have a good time.", "vi": "Hoạt động tình nguyện giúp bạn kết bạn mới và có thêm kỹ năng sống.", "group": "gk1", "subgroup": "gk1_p6", "source": "Đề GK1 - Câu 62"}, {"id": "q93", "audio": "sounds/q93.mp3", "text": "Linh doesn't like playing board games.", "vi": "Linh không thích chơi các trò chơi trên bàn cờ.", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 93"}, {"id": "q94", "audio": "sounds/q94.mp3", "text": "My mother goes to work by bike every day.", "vi": "Mẹ tôi đi làm bằng xe đạp mỗi ngày.", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 94"}, {"id": "q95", "audio": "sounds/q95.mp3", "text": "My uncle plays tennis three times a week to keep fit.", "vi": "Chú tôi chơi quần vợt ba lần một tuần để giữ gìn sức khỏe.", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 95"}, {"id": "q96", "audio": "sounds/q96.mp3", "text": "You shouldn't eat much fast food or sweetened food.", "vi": "Bạn không nên ăn nhiều đồ ăn nhanh hoặc thực phẩm có đường.", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 96"}, {"id": "q97", "audio": "sounds/q97.mp3", "text": "Your house is large and comfortable.", "vi": "Ngôi nhà của bạn thật rộng rãi và tiện nghi.", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 97"}, {"id": "q98", "audio": "sounds/q98.mp3", "text": "We have breakfast before we go to school.", "vi": "Chúng tôi ăn sáng trước khi đi học.", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 98"}, {"id": "q99", "audio": "sounds/q99.mp3", "text": "I feel fascinated when I do volunteer work.", "vi": "Tôi cảm thấy vô cùng hào hứng khi làm công việc tình nguyện.", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 99"}, {"id": "q100", "audio": "sounds/q100.mp3", "text": "We should help homeless people.", "vi": "Chúng ta nên giúp đỡ những người vô gia cư.", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 100"}, {"id": "q101", "audio": "sounds/q101.mp3", "text": "My mom enjoys cooking at the weekend.", "vi": "Mẹ tôi thích nấu ăn vào dịp cuối tuần.", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 101"}, {"id": "q102", "audio": "sounds/q102.mp3", "text": "What about taking up collecting dolls as a new hobby?", "vi": "Hay là chúng ta bắt đầu sở thích sưu tầm búp bê nhỉ?", "group": "gk1", "subgroup": "gk1_p9", "source": "Đề GK1 - Câu 102"}, {"id": "q103", "audio": "sounds/q103.mp3", "text": "I often go mountain climbing in the summer.", "vi": "Tôi thường đi leo núi vào mùa hè.", "group": "gk1", "subgroup": "gk1_p10", "source": "Đề GK1 - Câu 103"}, {"id": "q104", "audio": "sounds/q104.mp3", "text": "Last year, I spent a month in Italy and I didn't want to leave.", "vi": "Năm ngoái, tôi đã dành một tháng ở nước Ý và tôi không muốn rời đi.", "group": "gk1", "subgroup": "gk1_p10", "source": "Đề GK1 - Câu 104"}, {"id": "q105", "audio": "sounds/q105.mp3", "text": "Our charity started planting vegetables two years ago.", "vi": "Tổ chức từ thiện của chúng tôi đã bắt đầu trồng rau từ hai năm trước.", "group": "gk1", "subgroup": "gk1_p10", "source": "Đề GK1 - Câu 105"}, {"id": "q106", "audio": "sounds/q106.mp3", "text": "Children in our village exchange used paper for notebooks every school year.", "vi": "Trẻ em trong làng chúng tôi đổi giấy vụn lấy vở mới vào mỗi năm học.", "group": "gk1", "subgroup": "gk1_p10", "source": "Đề GK1 - Câu 106"}, {"id": "q107", "audio": "sounds/q107.mp3", "text": "David eats lots of junk food, and he does not do exercise.", "vi": "David ăn nhiều đồ ăn nhanh, và cậu ấy không tập thể dục.", "group": "gk1", "subgroup": "gk1_p10", "source": "Đề GK1 - Câu 107"}, {"id": "q108", "audio": "sounds/q108.mp3", "text": "Elena sleeps more and tries to relax on her day off.", "vi": "Elena ngủ nhiều hơn và cố gắng thư giãn vào ngày nghỉ của cô ấy.", "group": "gk1", "subgroup": "gk1_p10", "source": "Đề GK1 - Câu 108"}, {"id": "q109", "audio": "sounds/q109.mp3", "text": "I think you should take up running because it helps you keep fit.", "vi": "Tôi nghĩ bạn nên bắt đầu chạy bộ vì nó giúp bạn giữ gìn vóc dáng.", "group": "gk1", "subgroup": "gk1_p10", "source": "Đề GK1 - Câu 109"}, {"id": "q110", "audio": "sounds/q110.mp3", "text": "Some people say that carving eggshells is difficult and boring.", "vi": "Một số người nói rằng khắc vỏ trứng thì khó và nhàm chán.", "group": "gk1", "subgroup": "gk1_p10", "source": "Đề GK1 - Câu 110"}, {"id": "g_u1_t1_01", "audio": "sounds/grammar/g_u1_t1_01.mp3", "text": "My brother loves building model cars in his free time.", "vi": "Anh trai tôi thích lắp ráp mô hình ô tô vào thời gian rảnh rỗi.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_01"}, {"id": "g_u1_t1_02", "audio": "sounds/grammar/g_u1_t1_02.mp3", "text": "She usually does judo twice a week to keep fit and healthy.", "vi": "Cô ấy thường tập judo hai lần một tuần để giữ gìn vóc dáng và sức khỏe.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_02"}, {"id": "g_u1_t1_03", "audio": "sounds/grammar/g_u1_t1_03.mp3", "text": "Does your sister like collecting teddy bears or postcards?", "vi": "Em gái của bạn có thích sưu tầm gấu bông hay bưu thiếp không?", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_03"}, {"id": "g_u1_t1_04", "audio": "sounds/grammar/g_u1_t1_04.mp3", "text": "Nam doesn't enjoy collecting stamps because it takes a lot of time.", "vi": "Nam không thích sưu tầm tem vì nó tốn rất nhiều thời gian.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_04"}, {"id": "g_u1_t1_05", "audio": "sounds/grammar/g_u1_t1_05.mp3", "text": "My best friend is always on time for school; she is never late.", "vi": "Bạn thân nhất của tôi luôn đến trường đúng giờ; cô ấy không bao giờ đi muộn.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_05"}, {"id": "g_u1_t1_06", "audio": "sounds/grammar/g_u1_t1_06.mp3", "text": "My cousin fancies making origami birds and paper flowers.", "vi": "Anh họ tôi thích gấp chim origami và hoa giấy.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_06"}, {"id": "g_u1_t1_07", "audio": "sounds/grammar/g_u1_t1_07.mp3", "text": "How often does your father go fishing at the weekend?", "vi": "Bố bạn có thường đi câu cá vào dịp cuối tuần không?", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_07"}, {"id": "g_u1_t1_08", "audio": "sounds/grammar/g_u1_t1_08.mp3", "text": "We hate playing outdoors when the weather is boiling hot.", "vi": "Chúng tôi ghét chơi ngoài trời khi thời tiết nóng như thiêu như đốt.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_08"}, {"id": "g_u1_t1_09", "audio": "sounds/grammar/g_u1_t1_09.mp3", "text": "The school gardening club meets at 4 p.m. every Wednesday.", "vi": "Câu lạc bộ làm vườn của trường họp lúc 4 giờ chiều mỗi thứ Tư.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_09"}, {"id": "g_u1_t1_10", "audio": "sounds/grammar/g_u1_t1_10.mp3", "text": "Mai dislikes listening to heavy metal music; she adores soft pop songs.", "vi": "Mai không thích nghe nhạc rock nặng; cô ấy rất mê những bài hát pop nhẹ nhàng.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t1_10"}, {"id": "g_u1_t2_01", "audio": "sounds/grammar/g_u1_t2_01.mp3", "text": "My brother enjoys making cardboard dollhouses on Sundays.", "vi": "Bố tôi thích nghe các bản tin thời sự trên đài phát thanh mỗi buổi sáng.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t2_01"}, {"id": "g_u1_t2_02", "audio": "sounds/grammar/g_u1_t2_02.mp3", "text": "She doesn't like doing karate because she thinks it is dangerous.", "vi": "Bọn trẻ ghét ăn rau xanh, nhưng chúng rất thích đồ ngọt.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t2_02"}, {"id": "g_u1_t2_03", "audio": "sounds/grammar/g_u1_t2_03.mp3", "text": "They usually go swimming at the community pool every Saturday morning.", "vi": "Họ thích chơi cờ vua với ông của họ vào mỗi tối Chủ nhật.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t2_03"}, {"id": "g_u1_t2_04", "audio": "sounds/grammar/g_u1_t2_04.mp3", "text": "Lan loves drawing pictures of animals and flowers in her sketchbook.", "vi": "Chị gái tôi thích làm bánh kếp ngon cho cả gia đình.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t2_04"}, {"id": "g_u1_t2_05", "audio": "sounds/grammar/g_u1_t2_05.mp3", "text": "What time does the art club start every Friday afternoon?", "vi": "Chúng tôi rất thích cắm trại trong rừng vào những kỳ nghỉ hè.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t2_05"}, {"id": "g_u1_t3_01", "audio": "sounds/grammar/g_u1_t3_01.mp3", "text": "She doesn't like collecting teddy bears because they take up room.", "vi": "Cô ấy luôn thức dậy lúc sáu giờ để tập thể dục buổi sáng.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t3_01"}, {"id": "g_u1_t3_02", "audio": "sounds/grammar/g_u1_t3_02.mp3", "text": "My father enjoys playing chess with our neighbours after dinner.", "vi": "Họ thường đạp xe đi học cùng nhau khi trời nắng ráo.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t3_02"}, {"id": "g_u1_t3_03", "audio": "sounds/grammar/g_u1_t3_03.mp3", "text": "Tom is usually on time for the gardening club meeting.", "vi": "Em trai tôi thỉnh thoảng chơi trò chơi điện tử sau khi làm xong bài tập về nhà.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t3_03"}, {"id": "g_u1_t3_04", "audio": "sounds/grammar/g_u1_t3_04.mp3", "text": "Does your mother detest doing housework on the weekend?", "vi": "Mẹ tôi hiếm khi thức khuya xem TV vì bà phải dậy sớm.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t3_04"}, {"id": "g_u1_t3_05", "audio": "sounds/grammar/g_u1_t3_05.mp3", "text": "He fancies building models of famous bridges and buildings.", "vi": "Bạn không bao giờ nên băng qua đường khi đèn giao thông chuyển sang màu đỏ.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t3_05"}, {"id": "g_u1_t4_01", "audio": "sounds/grammar/g_u1_t4_01.mp3", "text": "I am really keen on painting. I often paint in the art studio on weekends.", "vi": "Trẻ em yêu thích làm đồ thủ công từ bìa các tông và chai nhựa cũ.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t4_01"}, {"id": "g_u1_t4_02", "audio": "sounds/grammar/g_u1_t4_02.mp3", "text": "My cousin has an unusual hobby. He adores catching insects and rare bugs.", "vi": "Bà tôi không thích sống ở một thành phố ồn ào và đông đúc.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t4_02"}, {"id": "g_u1_t4_03", "audio": "sounds/grammar/g_u1_t4_03.mp3", "text": "Linda is very creative; she enjoys making unique handmade souvenirs for her classmates.", "vi": "Bạn có thích tham gia câu lạc bộ bơi lội thanh thiếu niên với chúng tôi không?", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t4_03"}, {"id": "g_u1_t4_04", "audio": "sounds/grammar/g_u1_t4_04.mp3", "text": "Does your uncle usually go jogging around the lake in the early morning?", "vi": "Anh ấy rất thích sưu tầm những cuốn truyện tranh cổ điển từ khắp nơi trên thế giới.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t4_04"}, {"id": "g_u1_t4_05", "audio": "sounds/grammar/g_u1_t4_05.mp3", "text": "They detest waking up early when it is raining and cold outside.", "vi": "Nhiều thanh thiếu niên ghét làm việc nhà vào các buổi sáng cuối tuần.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t4_05"}, {"id": "g_u1_t5_01", "audio": "sounds/grammar/g_u1_t5_01.mp3", "text": "My brother enjoys building dollhouse models.", "vi": "Mặt trời mọc ở hướng đông và lặn ở hướng tây mỗi ngày.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t5_01"}, {"id": "g_u1_t5_02", "audio": "sounds/grammar/g_u1_t5_02.mp3", "text": "She is never late for music class.", "vi": "Bố tôi không lái xe đi làm; ông luôn đi tàu điện ngầm.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t5_02"}, {"id": "g_u1_t5_03", "audio": "sounds/grammar/g_u1_t5_03.mp3", "text": "Do you like collecting teddy bears?", "vi": "Chuyến tàu hỏa tiếp theo đến Hà Nội khởi hành lúc mấy giờ sáng nay?", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t5_03"}, {"id": "g_u1_t5_04", "audio": "sounds/grammar/g_u1_t5_04.mp3", "text": "They hate gardening when it rains.", "vi": "Nước sôi ở 100 độ C ở áp suất khí quyển tiêu chuẩn.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t5_04"}, {"id": "g_u1_t5_05", "audio": "sounds/grammar/g_u1_t5_05.mp3", "text": "How often does he go cycling?", "vi": "Họ không sống gần trường học, vì vậy họ đi xe buýt mỗi ngày.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t5_05"}, {"id": "g_u1_t6_01", "audio": "sounds/grammar/g_u1_t6_01.mp3", "text": "My sister enjoys making pottery very much.", "vi": "Anh ấy thích chơi bóng đá với bạn cùng lớp sau giờ học.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t6_01"}, {"id": "g_u1_t6_02", "audio": "sounds/grammar/g_u1_t6_02.mp3", "text": "He dislikes listening to rock music.", "vi": "Tôi ghét dậy sớm vào những ngày mùa đông lạnh giá.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t6_02"}, {"id": "g_u1_t6_03", "audio": "sounds/grammar/g_u1_t6_03.mp3", "text": "Does Nam go cycling in the park every weekend?", "vi": "Mẹ tôi rất thích trồng hoa hồng thơm ngát trong vườn trước nhà.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t6_03"}, {"id": "g_u1_t6_04", "audio": "sounds/grammar/g_u1_t6_04.mp3", "text": "Lan loves reading comic books.", "vi": "Chúng tôi không thích xem các chương trình truyền hình thực tế nhàm chán trên TV.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t6_04"}, {"id": "g_u1_t6_05", "audio": "sounds/grammar/g_u1_t6_05.mp3", "text": "They rarely play board games together.", "vi": "Nam rất thích học chơi đàn ghi-ta cổ điển.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t6_05"}, {"id": "g_u1_t7_01", "audio": "sounds/grammar/g_u1_t7_01.mp3", "text": "My father loves planting roses in the garden.", "vi": "Thầy giáo chúng tôi luôn giải thích các bài học ngữ pháp rất cẩn thận.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t7_01"}, {"id": "g_u1_t7_02", "audio": "sounds/grammar/g_u1_t7_02.mp3", "text": "He doesn't like playing computer games all day.", "vi": "Chúng tôi thường xuyên đến thăm ông bà vào các dịp nghỉ lễ lớn.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t7_02"}, {"id": "g_u1_t7_03", "audio": "sounds/grammar/g_u1_t7_03.mp3", "text": "Do you usually go cycling in the afternoon?", "vi": "Họ thỉnh thoảng đi ăn tối tại một nhà hàng hải sản địa phương.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t7_03"}, {"id": "g_u1_t7_04", "audio": "sounds/grammar/g_u1_t7_04.mp3", "text": "She fancies doing yoga before breakfast.", "vi": "Mai hiếm khi phàn nàn về khối lượng bài tập về nhà của mình.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t7_04"}, {"id": "g_u1_t7_05", "audio": "sounds/grammar/g_u1_t7_05.mp3", "text": "The train leaves at 8 o'clock every morning.", "vi": "Một người học sinh giỏi không bao giờ gian lận trong các kỳ thi học kỳ.", "category": "Unit 1: Hobbies (Sở thích)", "group": "grammar", "subgroup": "unit_1", "source": "Ngữ pháp - g_u1_t7_05"}, {"id": "g_u2_t1_01", "audio": "sounds/grammar/g_u2_t1_01.mp3", "text": "You should eat more fresh vegetables and less fast food to stay healthy.", "vi": "Bạn nên ăn nhiều rau tươi và ít đồ ăn nhanh để giữ gìn sức khỏe.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_01"}, {"id": "g_u2_t1_02", "audio": "sounds/grammar/g_u2_t1_02.mp3", "text": "He ate too much spicy food at lunch, so he has an upset stomach now.", "vi": "Cậu ấy đã ăn quá nhiều đồ ăn cay tối qua, vì vậy sáng nay cậu ấy bị đau dạ dày.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_02"}, {"id": "g_u2_t1_03", "audio": "sounds/grammar/g_u2_t1_03.mp3", "text": "Drink more water every day to keep your skin smooth and prevent dehydration.", "vi": "Rửa tay thường xuyên giúp ngăn ngừa nhiều bệnh truyền nhiễm thông thường.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_03"}, {"id": "g_u2_t1_04", "audio": "sounds/grammar/g_u2_t1_04.mp3", "text": "I want to eat chocolate cake, but I am trying to cut down on sugar.", "vi": "Cô ấy bị cháy nắng vì đã ở ngoài bãi biển suốt buổi chiều mà không đội mũ.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_04"}, {"id": "g_u2_t1_05", "audio": "sounds/grammar/g_u2_t1_05.mp3", "text": "Spend less time sitting in front of the screen and do more outdoor activities.", "vi": "Ngủ đủ giấc mỗi đêm giúp tăng cường hệ miễn dịch của bạn.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_05"}, {"id": "g_u2_t1_06", "audio": "sounds/grammar/g_u2_t1_06.mp3", "text": "You can cycle to school or take a brisk walk through the park.", "vi": "Bạn không nên uống quá nhiều nước ngọt có ga vì chúng chứa nhiều đường.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_06"}, {"id": "g_u2_t1_07", "audio": "sounds/grammar/g_u2_t1_07.mp3", "text": "Eat more colourful fruits, and your body will receive essential vitamins.", "vi": "Nếu bạn muốn giảm cân một cách an toàn, hãy tập thể dục đều đặn hơn.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_07"}, {"id": "g_u2_t1_08", "audio": "sounds/grammar/g_u2_t1_08.mp3", "text": "She exercises every morning, so she looks vigorous and full of energy.", "vi": "Mắt bạn bị mỏi vì bạn đã nhìn chằm chằm vào màn hình máy tính quá lâu.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_08"}, {"id": "g_u2_t1_09", "audio": "sounds/grammar/g_u2_t1_09.mp3", "text": "Vegetables provide important vitamins.", "vi": "Uống nhiều nước ấm khi bạn bị đau họng hoặc cảm lạnh.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_09"}, {"id": "g_u2_t1_10", "audio": "sounds/grammar/g_u2_t1_10.mp3", "text": "Wear a wide-brimmed hat and apply sun cream, or you will get sunburned.", "vi": "Mụn trứng cá là một vấn đề về da rất phổ biến ở lứa tuổi thanh thiếu niên.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t1_10"}, {"id": "g_u2_t2_01", "audio": "sounds/grammar/g_u2_t2_01.mp3", "text": "Eat more green vegetables to get healthy nutrients and dietary fibre.", "vi": "Hãy ăn nhiều rau xanh hơn để có được các chất dinh dưỡng lành mạnh và chất xơ.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t2_01"}, {"id": "g_u2_t2_02", "audio": "sounds/grammar/g_u2_t2_02.mp3", "text": "Watch less television so that your eyes do not get strained.", "vi": "Dành ít thời gian hơn cho trò chơi điện tử và dành nhiều thời gian hơn cho các hoạt động ngoài trời.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t2_02"}, {"id": "g_u2_t2_03", "audio": "sounds/grammar/g_u2_t2_03.mp3", "text": "My sister loves fresh vegetable salads, but she does not like fatty salad dressing.", "vi": "Bạn nên uống nhiều nước lọc hơn và uống ít đồ uống có ga hơn mỗi ngày.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t2_03"}, {"id": "g_u2_t2_04", "audio": "sounds/grammar/g_u2_t2_04.mp3", "text": "Wash your hands with antibacterial soap regularly, so you can avoid spreading flu viruses.", "vi": "Hãy ngủ nhiều hơn vào mỗi đêm để não bộ của bạn có thể nghỉ ngơi và hồi phục hoàn toàn.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t2_04"}, {"id": "g_u2_t2_05", "audio": "sounds/grammar/g_u2_t2_05.mp3", "text": "Drink less fizzy soft drinks to protect your teeth from decay.", "vi": "Ăn ít đồ ăn vặt nhiều dầu mỡ hơn để tránh bị thừa cân và béo phì.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t2_05"}, {"id": "g_u2_t3_01", "audio": "sounds/grammar/g_u2_t3_01.mp3", "text": "Eat more vegetables and less fast food if you want to be healthy.", "vi": "Cô ấy muốn giữ gìn vóc dáng, vì vậy cô ấy đi bộ năm cây số mỗi buổi sáng.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t3_01"}, {"id": "g_u2_t3_02", "audio": "sounds/grammar/g_u2_t3_02.mp3", "text": "He stayed up late playing video games, so he is very tired this morning.", "vi": "Tôi bị đau răng dữ dội, nhưng tôi vẫn phải hoàn thành dự án khoa học của mình.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t3_02"}, {"id": "g_u2_t3_03", "audio": "sounds/grammar/g_u2_t3_03.mp3", "text": "You can drink warm green tea or fresh orange juice; both are good for your health.", "vi": "Bạn có thể đi xe đạp đến công viên, hoặc bạn có thể đi bộ cùng chúng tôi.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t3_03"}, {"id": "g_u2_t3_04", "audio": "sounds/grammar/g_u2_t3_04.mp3", "text": "Spend less time on social media and sleep more at night.", "vi": "Trời bắt đầu mưa nặng hạt, vì vậy chúng tôi quyết định ở lại trong nhà và đọc sách.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t3_04"}, {"id": "g_u2_t3_05", "audio": "sounds/grammar/g_u2_t3_05.mp3", "text": "She wants to lose weight, but she never does any physical exercise.", "vi": "Cậu ấy cảm thấy rất mệt mỏi, nhưng cậu ấy từ chối đi ngủ sớm.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t3_05"}, {"id": "g_u2_t4_01", "audio": "sounds/grammar/g_u2_t4_01.mp3", "text": "To avoid acne and pimples, wash your face daily and eat less greasy junk food.", "vi": "Mặc quần áo ấm vào mùa đông, nếu không bạn sẽ dễ bị cảm lạnh.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t4_01"}, {"id": "g_u2_t4_02", "audio": "sounds/grammar/g_u2_t4_02.mp3", "text": "My grandfather eats plenty of fish, so he stays mentally alert and healthy.", "vi": "Nam tập thể dục chăm chỉ mỗi ngày, và cậu ấy tuân theo một chế độ ăn uống cân bằng.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t4_02"}, {"id": "g_u2_t4_03", "audio": "sounds/grammar/g_u2_t4_03.mp3", "text": "You should sleep at least 7 to 8 hours a night, so your body can fully recover.", "vi": "Cô ấy bị dị ứng với hải sản, vì vậy cô ấy không bao giờ ăn tôm hay cua.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t4_03"}, {"id": "g_u2_t4_04", "audio": "sounds/grammar/g_u2_t4_04.mp3", "text": "Do you want to play table tennis or go swimming this sunny afternoon?", "vi": "Bạn nên đánh răng hai lần một ngày, và bạn nên dùng chỉ nha khoa thường xuyên.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t4_04"}, {"id": "g_u2_t4_05", "audio": "sounds/grammar/g_u2_t4_05.mp3", "text": "He is severely allergic to seafood, so he cannot eat prawns or crabs.", "vi": "Căn phòng quá tối để đọc sách, vì vậy tôi đã bật đèn bàn.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t4_05"}, {"id": "g_u2_t5_01", "audio": "sounds/grammar/g_u2_t5_01.mp3", "text": "Eat more vegetables to stay healthy.", "vi": "Hãy ra ngoài và hít thở không khí trong lành nhiều hơn.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t5_01"}, {"id": "g_u2_t5_02", "audio": "sounds/grammar/g_u2_t5_02.mp3", "text": "Spend less time playing computer games.", "vi": "Đừng đọc sách trong điều kiện ánh sáng yếu vì nó gây hại cho mắt của bạn.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t5_02"}, {"id": "g_u2_t5_03", "audio": "sounds/grammar/g_u2_t5_03.mp3", "text": "She feels tired, so she sleeps early.", "vi": "Rửa mặt hai lần một ngày để giữ cho làn da sạch sẽ và không có dầu thừa.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t5_03"}, {"id": "g_u2_t5_04", "audio": "sounds/grammar/g_u2_t5_04.mp3", "text": "Drink more pure water every day.", "vi": "Hãy nghỉ giải lao ngắn sau mỗi bốn mươi lăm phút học bài.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t5_04"}, {"id": "g_u2_t5_05", "audio": "sounds/grammar/g_u2_t5_05.mp3", "text": "He wants to be fit, so he exercises.", "vi": "Hãy ăn nhiều trái cây tươi như táo, cam và chuối mỗi ngày.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t5_05"}, {"id": "g_u2_t6_01", "audio": "sounds/grammar/g_u2_t6_01.mp3", "text": "He ate a lot of junk food, so he gained weight.", "vi": "Anh ấy bị sốt cao, vì vậy anh ấy phải ở nhà nghỉ ngơi hôm nay.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t6_01"}, {"id": "g_u2_t6_02", "audio": "sounds/grammar/g_u2_t6_02.mp3", "text": "Watch less television.", "vi": "Tôi muốn mua một chiếc mũ mới, nhưng tôi không mang đủ tiền mặt.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t6_02"}, {"id": "g_u2_t6_03", "audio": "sounds/grammar/g_u2_t6_03.mp3", "text": "Eat more vegetables.", "vi": "Bạn có thể uống trà xanh ấm, hoặc bạn có thể uống nước chanh tươi.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t6_03"}, {"id": "g_u2_t6_04", "audio": "sounds/grammar/g_u2_t6_04.mp3", "text": "I like swimming, but I don't like running in the heat.", "vi": "Họ đã rất đói sau buổi tập bơi, vì vậy họ đã ăn một bữa trưa thật no nê.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t6_04"}, {"id": "g_u2_t6_05", "audio": "sounds/grammar/g_u2_t6_05.mp3", "text": "If you don't drink more water, your skin will become dry.", "vi": "Hoa thích vẽ tranh phong cảnh, và cô ấy cũng thích chụp ảnh thiên nhiên.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t6_05"}, {"id": "g_u2_t7_01", "audio": "sounds/grammar/g_u2_t7_01.mp3", "text": "Drink more water and eat less sugar.", "vi": "Hãy đội mũ rộng vành và thoa kem chống nắng khi bạn đi biển.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t7_01"}, {"id": "g_u2_t7_02", "audio": "sounds/grammar/g_u2_t7_02.mp3", "text": "He has a fever, so he stays at home.", "vi": "Dành ít thời gian lướt mạng xã hội vào ban đêm trước khi đi ngủ.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t7_02"}, {"id": "g_u2_t7_03", "audio": "sounds/grammar/g_u2_t7_03.mp3", "text": "Do more physical exercise to keep fit.", "vi": "Uống nhiều nước ấm để giữ ẩm cho cổ họng của bạn vào mùa đông khô hanh.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t7_03"}, {"id": "g_u2_t7_04", "audio": "sounds/grammar/g_u2_t7_04.mp3", "text": "She wants to be slim, but she eats too much fast food.", "vi": "Tập thể dục thường xuyên hơn để duy trì một cơ thể khỏe mạnh và săn chắc.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t7_04"}, {"id": "g_u2_t7_05", "audio": "sounds/grammar/g_u2_t7_05.mp3", "text": "Sleep more at night and don't stay up late.", "vi": "Hãy ăn ít bánh ngọt và kẹo ngọt hơn để bảo vệ răng của bạn khỏi bị sâu.", "category": "Unit 2: Healthy Living (Sống khỏe)", "group": "grammar", "subgroup": "unit_2", "source": "Ngữ pháp - g_u2_t7_05"}, {"id": "g_u3_t1_01", "audio": "sounds/grammar/g_u3_t1_01.mp3", "text": "Last summer, our youth volunteer club donated hundreds of warm coats to street children.", "vi": "Tuần trước, lớp chúng tôi đã đến thăm một trại trẻ mồ côi địa phương và tặng nhiều đồ chơi.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_01"}, {"id": "g_u3_t1_02", "audio": "sounds/grammar/g_u3_t1_02.mp3", "text": "We planted fifty saplings and colourful flowers in the community park yesterday.", "vi": "Các tình nguyện viên trẻ đã thu gom hàng trăm chai nhựa dọc theo bãi biển ngày hôm qua.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_02"}, {"id": "g_u3_t1_03", "audio": "sounds/grammar/g_u3_t1_03.mp3", "text": "Did you join the clean-up campaign around the local lake last weekend?", "vi": "Năm ngoái, câu lạc bộ trường học của chúng tôi đã quyên góp quần áo ấm cho trẻ em vùng cao nghèo khó.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_03"}, {"id": "g_u3_t1_04", "audio": "sounds/grammar/g_u3_t1_04.mp3", "text": "They collected used paper and plastic bottles for recycling two days ago.", "vi": "Họ đã dọn sạch tất cả rác thải ở công viên trung tâm vào Chủ nhật tuần trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_04"}, {"id": "g_u3_t1_05", "audio": "sounds/grammar/g_u3_t1_05.mp3", "text": "My sister tutored English and maths to disadvantaged children in our village last summer.", "vi": "Bạn đã tham gia sự kiện hiến máu nhân đạo vào tháng trước phải không?", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_05"}, {"id": "g_u3_t1_06", "audio": "sounds/grammar/g_u3_t1_06.mp3", "text": "We went to the nursing home to visit and cheer up the elderly people last Sunday.", "vi": "Chúng tôi đã dạy kèm tiếng Anh cho trẻ em đường phố vào mùa hè năm ngoái.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_06"}, {"id": "g_u3_t1_07", "audio": "sounds/grammar/g_u3_t1_07.mp3", "text": "The volunteers provided hot meals and warm blankets to homeless people last winter.", "vi": "Chị gái tôi đã giúp nấu các bữa ăn bổ dưỡng tại viện dưỡng lão địa phương hai ngày trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_07"}, {"id": "g_u3_t1_08", "audio": "sounds/grammar/g_u3_t1_08.mp3", "text": "I was at home yesterday evening because I had to complete my school project.", "vi": "Các học sinh đã trồng năm mươi cây xanh mới xung quanh khuôn viên trường vào sáng thứ Bảy tuần trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_08"}, {"id": "g_u3_t1_09", "audio": "sounds/grammar/g_u3_t1_09.mp3", "text": "They didn't finish clearing the litter from the beach before sunset.", "vi": "Nam đã không tham gia chiến dịch làm sạch khu phố vì cậu ấy bị ốm.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_09"}, {"id": "g_u3_t1_10", "audio": "sounds/grammar/g_u3_t1_10.mp3", "text": "When did the community green project start? - It started three weeks ago.", "vi": "Các bạn đã làm gì để hỗ trợ người già neo đơn trong cộng đồng vào cuối tuần trước?", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t1_10"}, {"id": "g_u3_t2_01", "audio": "sounds/grammar/g_u3_t2_01.mp3", "text": "Last weekend, we helped the elderly residents in the nursing home with gardening.", "vi": "Ngày hôm qua, chúng tôi đã tổ chức một hội chợ sách từ thiện để gây quỹ.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t2_01"}, {"id": "g_u3_t2_02", "audio": "sounds/grammar/g_u3_t2_02.mp3", "text": "They didn't clean the dirty canal two days ago because of heavy rain.", "vi": "Cô ấy đã dạy toán cho các em nhỏ có hoàn cảnh khó khăn vào kỳ nghỉ hè năm ngoái.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t2_02"}, {"id": "g_u3_t2_03", "audio": "sounds/grammar/g_u3_t2_03.mp3", "text": "My friend gave her collection of old textbooks to poor children yesterday.", "vi": "Họ đã sơn lại những bức tường cũ kỹ của trường mẫu giáo vào tháng trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t2_03"}, {"id": "g_u3_t2_04", "audio": "sounds/grammar/g_u3_t2_04.mp3", "text": "We planted fifty trees along the village canal last Friday afternoon.", "vi": "Bạn tôi đã quyên góp tất cả những cuốn sách cũ của cậu ấy cho thư viện cộng đồng hai ngày trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t2_04"}, {"id": "g_u3_t2_05", "audio": "sounds/grammar/g_u3_t2_05.mp3", "text": "Did you visit the children's hospital last Sunday?", "vi": "Các tình nguyện viên đã cung cấp bữa ăn miễn phí cho những người vô gia cư vào tối Chủ nhật tuần trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t2_05"}, {"id": "g_u3_t3_01", "audio": "sounds/grammar/g_u3_t3_01.mp3", "text": "We didn't donate warm clothes to poor children last winter.", "vi": "Họ đã không tham dự buổi hòa nhạc gây quỹ vì trời mưa bão lớn.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t3_01"}, {"id": "g_u3_t3_02", "audio": "sounds/grammar/g_u3_t3_02.mp3", "text": "Did you help the elderly people clean their houses yesterday?", "vi": "Hôm qua bạn có tham gia nhóm tình nguyện bảo vệ môi trường không?", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t3_02"}, {"id": "g_u3_t3_03", "audio": "sounds/grammar/g_u3_t3_03.mp3", "text": "She went to the nursing home with her classmates last weekend.", "vi": "Tôi đã không nhìn thấy Minh tại trung tâm cộng đồng vào chiều hôm qua.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t3_03"}, {"id": "g_u3_t3_04", "audio": "sounds/grammar/g_u3_t3_04.mp3", "text": "They collected plastic bottles to recycle two days ago.", "vi": "Thầy giáo đã dạy chúng tôi cách phân loại rác thải có thể tái chế vào tuần trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t3_04"}, {"id": "g_u3_t3_05", "audio": "sounds/grammar/g_u3_t3_05.mp3", "text": "Last month, our school club organized a charity fair to raise funds.", "vi": "Họ đã hoàn thành dự án dọn vệ sinh bờ sông trước 5 giờ chiều ngày hôm qua.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t3_05"}, {"id": "g_u3_t4_01", "audio": "sounds/grammar/g_u3_t4_01.mp3", "text": "Two weeks ago, our class painted colourful murals on the old walls of the primary school.", "vi": "Hai tuần trước, lớp chúng tôi đã vẽ những bức tranh tường rực rỡ lên những bức tường cũ của trường tiểu học.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t4_01"}, {"id": "g_u3_t4_02", "audio": "sounds/grammar/g_u3_t4_02.mp3", "text": "Our neighbourhood became much cleaner and safer after the volunteer clean-up weekend.", "vi": "Học sinh các trường đã quyên góp hàng ngàn cuốn vở mới cho học sinh vùng lũ lụt.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t4_02"}, {"id": "g_u3_t4_03", "audio": "sounds/grammar/g_u3_t4_03.mp3", "text": "We recycled fifty kilograms of discarded paper and sent it to a recycling plant.", "vi": "Bác sĩ và y tá đã khám bệnh miễn phí cho người nghèo vào Chủ nhật tuần trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t4_03"}, {"id": "g_u3_t4_04", "audio": "sounds/grammar/g_u3_t4_04.mp3", "text": "Many doctors and nurses donated blood for emergency patients last month.", "vi": "Chúng tôi đã thu dọn toàn bộ giấy vụn trong các lớp học để gửi đi tái chế.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t4_04"}, {"id": "g_u3_t4_05", "audio": "sounds/grammar/g_u3_t4_05.mp3", "text": "Where did you go for your volunteer work during the summer vacation?", "vi": "Họ đã xây dựng một sân chơi an toàn mới cho trẻ em nông thôn vào tháng trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t4_05"}, {"id": "g_u3_t5_01", "audio": "sounds/grammar/g_u3_t5_01.mp3", "text": "We planted trees in the park yesterday.", "vi": "Mai đã giúp những người cao tuổi qua đường đông đúc vào sáng nay.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t5_01"}, {"id": "g_u3_t5_02", "audio": "sounds/grammar/g_u3_t5_02.mp3", "text": "They donated old books to poor children.", "vi": "Bạn đã dành bao nhiêu giờ làm công việc từ thiện vào cuối tuần trước?", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t5_02"}, {"id": "g_u3_t5_03", "audio": "sounds/grammar/g_u3_t5_03.mp3", "text": "Did you clean up the beach last Sunday?", "vi": "Các tình nguyện viên đã tưới nước cho tất cả những cây non vừa mới trồng trong công viên.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t5_03"}, {"id": "g_u3_t5_04", "audio": "sounds/grammar/g_u3_t5_04.mp3", "text": "She tutored maths to children in the neighbourhood.", "vi": "Chúng tôi đã cảm thấy vô cùng tự hào và hạnh phúc sau khi hoàn thành dự án cộng đồng.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t5_04"}, {"id": "g_u3_t5_05", "audio": "sounds/grammar/g_u3_t5_05.mp3", "text": "We collected warm clothes for homeless people.", "vi": "Anh ấy đã tặng chiếc xe đạp cũ của mình cho một cậu bé nghèo trong xóm vào ngày hôm qua.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t5_05"}, {"id": "g_u3_t6_01", "audio": "sounds/grammar/g_u3_t6_01.mp3", "text": "We didn't plant 50 trees in our school garden yesterday.", "vi": "Họ đã tổ chức một giải chạy bộ marathon từ thiện để quyên tiền giúp đỡ bệnh nhi nghèo.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t6_01"}, {"id": "g_u3_t6_02", "audio": "sounds/grammar/g_u3_t6_02.mp3", "text": "Did she collect used paper last week?", "vi": "Chúng tôi đã thu gom các túi ni-lông đã qua sử dụng để bảo vệ môi trường xung quanh hồ nước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t6_02"}, {"id": "g_u3_t6_03", "audio": "sounds/grammar/g_u3_t6_03.mp3", "text": "They started the community project in the past.", "vi": "Chị ấy đã hướng dẫn các em nhỏ kỹ năng gấp giấy và vẽ tranh vào kỳ nghỉ vừa qua.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t6_03"}, {"id": "g_u3_t6_04", "audio": "sounds/grammar/g_u3_t6_04.mp3", "text": "He didn't teach English to village children last summer.", "vi": "Năm ngoái câu lạc bộ của chúng tôi đã trao tặng 200 suất học bổng cho học sinh hiếu học.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t6_04"}, {"id": "g_u3_t6_05", "audio": "sounds/grammar/g_u3_t6_05.mp3", "text": "Yes, I did.", "vi": "Mọi người đã làm việc rất chăm chỉ cùng nhau để làm đẹp cho khu phố của mình.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t6_05"}, {"id": "g_u3_t7_01", "audio": "sounds/grammar/g_u3_t7_01.mp3", "text": "We donated warm clothes to poor children last week.", "vi": "Tôi đã gặp gỡ rất nhiều người bạn tuyệt vời trong suốt chuyến đi tình nguyện vào mùa hè năm ngoái.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t7_01"}, {"id": "g_u3_t7_02", "audio": "sounds/grammar/g_u3_t7_02.mp3", "text": "They cleaned up the neighbourhood park yesterday.", "vi": "Họ đã phát các tờ rơi tuyên truyền về việc bảo vệ nguồn nước sạch vào sáng thứ Hai tuần trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t7_02"}, {"id": "g_u3_t7_03", "audio": "sounds/grammar/g_u3_t7_03.mp3", "text": "Did you visit the elderly people last Sunday?", "vi": "Bạn đã gửi bưu kiện quà tặng tới trại trẻ mồ côi khi nào?", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t7_03"}, {"id": "g_u3_t7_04", "audio": "sounds/grammar/g_u3_t7_04.mp3", "text": "She taught maths to street children two months ago.", "vi": "Chúng tôi đã dọn sạch cỏ dại xung quanh đài tưởng niệm các anh hùng liệt sĩ vào tuần trước.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t7_04"}, {"id": "g_u3_t7_05", "audio": "sounds/grammar/g_u3_t7_05.mp3", "text": "We didn't join the volunteer project last year.", "vi": "Hoạt động cộng đồng đã giúp chúng tôi nhận ra giá trị to lớn của sự sẻ chia và lòng nhân ái.", "category": "Unit 3: Community Service (Dịch vụ cộng đồng)", "group": "grammar", "subgroup": "unit_3", "source": "Ngữ pháp - g_u3_t7_05"}, {"id": "g_rev_t1_01", "audio": "sounds/grammar/g_rev_t1_01.mp3", "text": "My mother enjoys cooking traditional food on Sundays, but yesterday she ate out.", "vi": "Anh trai tôi thích đi bộ đường dài trên núi vào mùa thu.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_01"}, {"id": "g_rev_t1_02", "audio": "sounds/grammar/g_rev_t1_02.mp3", "text": "If you want to maintain good health, eat less sugar and do more physical exercise.", "vi": "Bạn có thường xuyên ăn đồ ăn nhanh sau giờ học buổi chiều không?", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_02"}, {"id": "g_rev_t1_03", "audio": "sounds/grammar/g_rev_t1_03.mp3", "text": "Last year, our youth club planted 100 trees, and this year we collect used batteries.", "vi": "Cô ấy bị đau họng dữ dội, vì vậy cô ấy không thể hát hôm nay.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_03"}, {"id": "g_rev_t1_04", "audio": "sounds/grammar/g_rev_t1_04.mp3", "text": "He fancies playing the guitar, so he practices diligently every afternoon.", "vi": "Tuần trước chúng tôi đã thu gom rất nhiều chai nhựa cũ để tái chế.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_04"}, {"id": "g_rev_t1_05", "audio": "sounds/grammar/g_rev_t1_05.mp3", "text": "Did your family members volunteer at the community shelter last weekend?", "vi": "Hãy ăn nhiều hoa quả tươi hơn và uống ít trà ngọt hơn mỗi ngày.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_05"}, {"id": "g_rev_t1_06", "audio": "sounds/grammar/g_rev_t1_06.mp3", "text": "Nam loves participating in outdoor activities, but his brother prefers staying indoors.", "vi": "Trẻ em yêu thích việc làm các mô hình đất sét đầy màu sắc.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_06"}, {"id": "g_rev_t1_07", "audio": "sounds/grammar/g_rev_t1_07.mp3", "text": "Listen carefully! The teacher is explaining the instructions right now.", "vi": "Hôm qua bạn có tham gia chiến dịch làm sạch đường phố không?", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_07"}, {"id": "g_rev_t1_08", "audio": "sounds/grammar/g_rev_t1_08.mp3", "text": "They travelled to Da Nang two months ago to attend the national science fair.", "vi": "Họ muốn bảo vệ môi trường, vì vậy họ đạp xe đi làm mỗi ngày.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_08"}, {"id": "g_rev_t1_09", "audio": "sounds/grammar/g_rev_t1_09.mp3", "text": "Eat more fresh vegetables, and your digestive system will function better.", "vi": "Anh họ của tôi ghét dậy sớm vào những buổi sáng mùa đông giá rét.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_09"}, {"id": "g_rev_t1_10", "audio": "sounds/grammar/g_rev_t1_10.mp3", "text": "She doesn't like waking early on cold winter mornings.", "vi": "Mẹ tôi đã mua cho tôi một chiếc áo khoác ấm vào Chủ nhật tuần trước.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t1_10"}, {"id": "g_rev_t2_01", "audio": "sounds/grammar/g_rev_t2_01.mp3", "text": "He usually plays football on Saturdays, but yesterday he went fishing.", "vi": "Chúng tôi thích chơi các trò chơi dân gian ngoài trời vào giờ ra chơi.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t2_01"}, {"id": "g_rev_t2_02", "audio": "sounds/grammar/g_rev_t2_02.mp3", "text": "My brother detests washing the greasy dishes after meals.", "vi": "Bố tôi luôn kiểm tra email công việc trước bữa ăn sáng.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t2_02"}, {"id": "g_rev_t2_03", "audio": "sounds/grammar/g_rev_t2_03.mp3", "text": "Last night, our family watched an inspiring documentary about community volunteers.", "vi": "Cậu ấy cảm thấy kiệt sức, nhưng cậu ấy vẫn cố gắng làm xong bài tập về nhà.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t2_03"}, {"id": "g_rev_t2_04", "audio": "sounds/grammar/g_rev_t2_04.mp3", "text": "Eat less fatty food to keep your cardiovascular system healthy.", "vi": "Các tình nguyện viên đã sơn lại những cánh cổng trường học cũ vào tuần trước.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t2_04"}, {"id": "g_rev_t2_05", "audio": "sounds/grammar/g_rev_t2_05.mp3", "text": "She didn't come to the volunteer meeting last Sunday because she was unwell.", "vi": "Hãy tập thể dục đều đặn hơn để nâng cao sức đề kháng của cơ thể.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t2_05"}, {"id": "g_rev_t3_01", "audio": "sounds/grammar/g_rev_t3_01.mp3", "text": "Yesterday my sister enjoyed listening to classical music in her room.", "vi": "Bạn có thể học bài với tôi, hoặc bạn có thể đọc sách một mình.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t3_01"}, {"id": "g_rev_t3_02", "audio": "sounds/grammar/g_rev_t3_02.mp3", "text": "He didn't go to school yesterday because he had a high fever.", "vi": "Cô ấy đã không đến trường vào thứ Sáu tuần trước vì bị sốt vi-rút.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t3_02"}, {"id": "g_rev_t3_03", "audio": "sounds/grammar/g_rev_t3_03.mp3", "text": "Eat less junk food and drink more water to maintain your health.", "vi": "Họ rất đam mê sưu tầm những con tem bưu chính quý hiếm từ nhiều quốc gia.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t3_03"}, {"id": "g_rev_t3_04", "audio": "sounds/grammar/g_rev_t3_04.mp3", "text": "Did your brother like collecting stamps when he was young?", "vi": "Đừng chạm vào mắt bằng đôi bàn tay bẩn để tránh nhiễm khuẩn.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t3_04"}, {"id": "g_rev_t3_05", "audio": "sounds/grammar/g_rev_t3_05.mp3", "text": "She fancies cooking Vietnamese traditional dishes for her whole family.", "vi": "Chúng tôi đã trồng rất nhiều hoa cúc rực rỡ trong vườn trường vào tháng trước.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t3_05"}, {"id": "g_rev_t4_01", "audio": "sounds/grammar/g_rev_t4_01.mp3", "text": "My older brother is keen on sports; he plays football with his friends every afternoon.", "vi": "Bà tôi thích đọc sách báo trong phòng khách ngập tràn ánh nắng.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t4_01"}, {"id": "g_rev_t4_02", "audio": "sounds/grammar/g_rev_t4_02.mp3", "text": "Last weekend, the students collected twenty bags of plastic rubbish along the riverbank.", "vi": "Cậu ấy đã ăn nhiều đồ ngọt, vì vậy cậu ấy đã bị sâu một chiếc răng hàm.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t4_02"}, {"id": "g_rev_t4_03", "audio": "sounds/grammar/g_rev_t4_03.mp3", "text": "You should drink more herbal tea instead of drinking strong coffee before bed.", "vi": "Các học sinh đã đổi giấy vụn lấy cây xanh nhỏ vào tuần trước.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t4_03"}, {"id": "g_rev_t4_04", "audio": "sounds/grammar/g_rev_t4_04.mp3", "text": "Did your family have a picnic in the botanical garden two days ago?", "vi": "Bạn nên uống ít nước ngọt đóng chai hơn để bảo vệ sức khỏe của mình.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t4_04"}, {"id": "g_rev_t4_05", "audio": "sounds/grammar/g_rev_t4_05.mp3", "text": "I wanted to join the community volunteer club, but I was too busy with exams.", "vi": "Chị gái tôi thỉnh thoảng nướng những chiếc bánh quy sô-cô-la thơm ngon cho tôi.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t4_05"}, {"id": "g_rev_t5_01", "audio": "sounds/grammar/g_rev_t5_01.mp3", "text": "My father loves jogging in the early morning.", "vi": "Trời đang mưa rào, vì vậy chúng tôi không thể chơi bóng đá ở sân cỏ.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t5_01"}, {"id": "g_rev_t5_02", "audio": "sounds/grammar/g_rev_t5_02.mp3", "text": "Eat more fresh fruit and less sweets.", "vi": "Họ đã dạy hát và múa cho các em nhỏ mồ côi vào mùa hè năm ngoái.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t5_02"}, {"id": "g_rev_t5_03", "audio": "sounds/grammar/g_rev_t5_03.mp3", "text": "We went to the nursing home yesterday.", "vi": "Hãy thoa kem dưỡng ẩm lên da để tránh bị khô ráp và nứt nẻ.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t5_03"}, {"id": "g_rev_t5_04", "audio": "sounds/grammar/g_rev_t5_04.mp3", "text": "They didn't clean the playground last Sunday.", "vi": "Anh ấy rất thích chụp những bức ảnh cận cảnh về côn trùng và hoa lá.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t5_04"}, {"id": "g_rev_t5_05", "audio": "sounds/grammar/g_rev_t5_05.mp3", "text": "She feels tired, so she rests early.", "vi": "Bạn đã bắt đầu sở thích chơi đàn piano từ khi nào?", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t5_05"}, {"id": "g_rev_t6_01", "audio": "sounds/grammar/g_rev_t6_01.mp3", "text": "Lan enjoys making handmade crafts.", "vi": "Lan rất thích làm các món đồ thủ công mỹ nghệ bằng tay.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t6_01"}, {"id": "g_rev_t6_02", "audio": "sounds/grammar/g_rev_t6_02.mp3", "text": "Spend less time playing video games.", "vi": "Nam ăn rất nhiều thức ăn nhanh, vì vậy cậu ấy đang bị tăng cân.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t6_02"}, {"id": "g_rev_t6_03", "audio": "sounds/grammar/g_rev_t6_03.mp3", "text": "We didn't plant trees in the park last Sunday.", "vi": "Chúng tôi đã đến thăm viện dưỡng lão và trò chuyện cùng các cụ già vào tháng trước.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t6_03"}, {"id": "g_rev_t6_04", "audio": "sounds/grammar/g_rev_t6_04.mp3", "text": "He was ill, so he didn't go to school.", "vi": "Hãy dành ít thời gian xem tivi hơn và dành nhiều thời gian hơn cho việc đọc sách bổ ích.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t6_04"}, {"id": "g_rev_t6_05", "audio": "sounds/grammar/g_rev_t6_05.mp3", "text": "Yes, they did.", "vi": "Họ đã hoàn thành bức tranh cổ động bảo vệ môi trường vào ngày hôm qua.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t6_05"}, {"id": "g_rev_t7_01", "audio": "sounds/grammar/g_rev_t7_01.mp3", "text": "My sister enjoys doing morning exercise every day.", "vi": "Tôi thích nghe nhạc cổ điển êm dịu khi tôi cảm thấy căng thẳng.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t7_01"}, {"id": "g_rev_t7_02", "audio": "sounds/grammar/g_rev_t7_02.mp3", "text": "Drink more water and eat less junk food.", "vi": "Bạn có thích bơi lội ở hồ bơi công cộng vào mùa hè không?", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t7_02"}, {"id": "g_rev_t7_03", "audio": "sounds/grammar/g_rev_t7_03.mp3", "text": "We planted many trees in the school garden yesterday.", "vi": "Anh ấy không đi xe buýt; anh ấy luôn thích đi bộ để rèn luyện sức khỏe.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t7_03"}, {"id": "g_rev_t7_04", "audio": "sounds/grammar/g_rev_t7_04.mp3", "text": "They didn't clean the beach last weekend.", "vi": "Chúng tôi đã quyên góp được rất nhiều sách truyện hay cho thư viện trường nghèo vào tuần trước.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t7_04"}, {"id": "g_rev_t7_05", "audio": "sounds/grammar/g_rev_t7_05.mp3", "text": "Did you join the green campaign last month?", "vi": "Hãy ngủ đủ tám tiếng mỗi đêm để có một tinh thần sảng khoái và tràn đầy năng lượng.", "category": "Review 1: Ôn tập tổng hợp Unit 1-2-3", "group": "grammar", "subgroup": "review_1", "source": "Ngữ pháp - g_rev_t7_05"}];
+
+function shuffle(array) {
+  return array.map(x => ({ val: x, sort: Math.random() }))
+              .sort((a, b) => a.sort - b.sort)
+              .map(x => x.val);
+}
+
+let currentTopicKey = 'gk1_p10';
+let sentences = [];
+let currentIndex = 0;
+let correctWords = [];
+let history = [];
+let correctCount = 0;
+let totalTime = 0;
+let timer = 0;
+let interval = null;
+let popupTimeout = null;
+let currentPlaybackRate = 1;
+let isChecked = false;
+let currentAudioObj = null;
+
+// Lọc câu hỏi theo chủ đề được chọn
+function filterSentencesByTopic(key) {
+  let pool = [];
+  if (key === 'gk1_p10') {
+    pool = MASTER_SENTENCES.filter(s => s.subgroup === 'gk1_p10');
+  } else if (key === 'gk1_p9') {
+    pool = MASTER_SENTENCES.filter(s => s.subgroup === 'gk1_p9');
+  } else if (key === 'gk1_p2') {
+    pool = MASTER_SENTENCES.filter(s => s.subgroup === 'gk1_p2');
+  } else if (key === 'gk1_all') {
+    pool = MASTER_SENTENCES.filter(s => s.group === 'gk1');
+  } else if (key === 'unit_1') {
+    pool = MASTER_SENTENCES.filter(s => s.subgroup === 'unit_1');
+  } else if (key === 'unit_2') {
+    pool = MASTER_SENTENCES.filter(s => s.subgroup === 'unit_2');
+  } else if (key === 'unit_3') {
+    pool = MASTER_SENTENCES.filter(s => s.subgroup === 'unit_3');
+  } else if (key === 'review_1') {
+    pool = MASTER_SENTENCES.filter(s => s.subgroup === 'review_1');
+  } else if (key === 'random_10') {
+    pool = shuffle([...MASTER_SENTENCES]).slice(0, 10);
+  } else {
+    pool = [...MASTER_SENTENCES];
+  }
+
+  // Nếu không phải bộ random_10 thì xáo trộn thứ tự câu
+  if (key !== 'random_10') {
+    pool = shuffle(pool);
+  }
+  return pool;
+}
+
+// Đổi chủ đề khi người dùng chọn trên dropdown
+function changeTopic(key) {
+  currentTopicKey = key;
+  const selectEl = document.getElementById("topic-select");
+  const selectedText = selectEl.options[selectEl.selectedIndex].text;
+  document.getElementById("category-badge").textContent = selectedText;
+
+  sentences = filterSentencesByTopic(key);
+  currentIndex = 0;
+  correctCount = 0;
+  totalTime = 0;
+  loadSentence(currentIndex);
+}
+
+function toggleSpeed() {
+  const btn = document.getElementById("speed-btn");
+  if (currentPlaybackRate === 1) {
+    currentPlaybackRate = 0.75;
+    btn.classList.add("btn-speed-active");
+  } else if (currentPlaybackRate === 0.75) {
+    currentPlaybackRate = 0.5;
+    btn.classList.add("btn-speed-active");
+  } else {
+    currentPlaybackRate = 1;
+    btn.classList.remove("btn-speed-active");
+  }
+  btn.textContent = `Tốc độ: ${currentPlaybackRate}x`;
+}
+
+// Phát âm từ đơn khi bấm vào thẻ từ
+function pronounce(word) {
+  if (!word || word === '.' || word === '?' || word === '!' || word === ',') return;
+  try {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = "en-US";
+      utterance.rate = currentPlaybackRate;
+      const voices = speechSynthesis.getVoices();
+      utterance.voice = voices.find(v => v.lang === "en-US" && v.name.includes("Google")) || voices[0];
+      speechSynthesis.speak(utterance);
+    }
+  } catch (e) {
+    console.warn("TTS error:", e);
+  }
+}
+
+// Phát âm toàn bộ câu bằng file MP3 offline chuẩn từ sounds/
+function playSentenceAudio(index) {
+  if (!sentences || !sentences[index]) return;
+  const s = sentences[index];
+  
+  if (currentAudioObj) {
+    currentAudioObj.pause();
+    currentAudioObj = null;
+  }
+
+  try {
+    currentAudioObj = new Audio(s.audio);
+    currentAudioObj.playbackRate = currentPlaybackRate;
+    
+    currentAudioObj.play().catch(e => {
+      // Fallback sang Web Speech API nếu trình duyệt chặn autoplay hoặc không nạp được
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(s.text);
+        utterance.lang = "en-US";
+        utterance.rate = currentPlaybackRate;
+        speechSynthesis.speak(utterance);
+      }
+    });
+  } catch (err) {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(s.text);
+      utterance.lang = "en-US";
+      utterance.rate = currentPlaybackRate;
+      speechSynthesis.speak(utterance);
+    }
+  }
+}
+
+function showTranslation(event) {
+  if (event) event.preventDefault();
+  if (!sentences[currentIndex]) return;
+  const s = sentences[currentIndex];
+
+  const popup = document.getElementById("trans-popup");
+  document.getElementById("trans-source").textContent = s.source || s.category || "";
+  document.getElementById("trans-text").textContent = s.vi;
+  document.getElementById("trans-en").textContent = s.text;
+  popup.style.display = "block";
+
+  if (popupTimeout) clearTimeout(popupTimeout);
+  popupTimeout = setTimeout(() => { popup.style.display = "none"; }, 5000);
+}
+
+function playFullSentence(event) {
+  if (event) event.preventDefault();
+  playSentenceAudio(currentIndex);
+}
+
+function loadSentence(index) {
+  clearInterval(interval);
+  timer = 0;
+  isChecked = false;
+  
+  const mainBtn = document.getElementById("main-action-btn");
+  mainBtn.textContent = "Kiểm tra";
+  mainBtn.style.backgroundColor = "#8b5e3c";
+  mainBtn.style.display = "inline-block";
+
+  document.getElementById("timer").textContent = timer;
+  interval = setInterval(() => {
+    timer++;
+    document.getElementById("timer").textContent = timer;
+  }, 1000);
+
+  document.getElementById("result").textContent = "";
+  document.getElementById("summary").textContent = "";
+  document.getElementById("current-question").textContent = index + 1;
+  document.getElementById("total-question").textContent = sentences.length;
+
+  const currentItem = sentences[index];
+  
+  // Tách từ chuẩn hóa và tách dấu câu cuối (. ? !) thành 1 token riêng
+  correctWords = currentItem.text
+    .replace(/([.?!])/g, " $1")
+    .trim()
+    .split(/\s+/)
+    .filter(w => w !== "");
+
+  const shuffled = shuffle(correctWords);
+
+  history = [];
+  const wordBank = document.getElementById("word-bank");
+  wordBank.innerHTML = "";
+  
+  shuffled.forEach(word => {
+    const span = document.createElement("span");
+    span.className = "word";
+    span.textContent = word;
+    span.onclick = () => {
+      if (!isChecked) {
+        pronounce(word);
+        selectWord(span);
+      }
+    };
+    wordBank.appendChild(span);
+  });
+
+  const dropArea = document.getElementById("drop-area");
+  dropArea.innerHTML = '<div class="drop-empty-hint">Chạm hoặc click từ bên dưới để ghép vào đây...</div>';
+}
+
+function selectWord(span) {
+  const dropArea = document.getElementById("drop-area");
+  const hintEl = dropArea.querySelector(".drop-empty-hint");
+  if (hintEl) hintEl.remove();
+
+  const text = span.textContent;
+  span.classList.add("used");
+  const newSpan = document.createElement("span");
+  newSpan.className = "word";
+  newSpan.textContent = text;
+  newSpan.onclick = () => {
+    if (!isChecked) {
+      newSpan.remove();
+      span.classList.remove("used");
+      const histIndex = history.findIndex(h => h.span === newSpan);
+      if (histIndex > -1) history.splice(histIndex, 1);
+      if (dropArea.children.length === 0) {
+        dropArea.innerHTML = '<div class="drop-empty-hint">Chạm hoặc click từ bên dưới để ghép vào đây...</div>';
+      }
+    }
+  };
+  dropArea.appendChild(newSpan);
+  history.push({ span: newSpan, source: span });
+}
+
+function undo() {
+  if (isChecked) return;
+  const last = history.pop();
+  if (last) {
+    last.span.remove();
+    last.source.classList.remove("used");
+  }
+  const dropArea = document.getElementById("drop-area");
+  if (dropArea.children.length === 0) {
+    dropArea.innerHTML = '<div class="drop-empty-hint">Chạm hoặc click từ bên dưới để ghép vào đây...</div>';
+  }
+}
+
+function restart() { 
+  loadSentence(currentIndex); 
+}
+
+function checkOrNext() {
+  if (!isChecked) {
+    checkSentence();
+  } else {
+    nextSentence();
+  }
+}
+
+function checkSentence() {
+  const dropWords = Array.from(document.getElementById("drop-area").children)
+    .filter(el => !el.classList.contains("drop-empty-hint"))
+    .map(el => el.textContent);
+
+  if (dropWords.length === 0) {
+    document.getElementById("result").innerHTML = '<span style="color:#e67e22">⚠️ Vui lòng chọn các từ để hoàn thiện câu trước khi kiểm tra!</span>';
+    return;
+  }
+
+  const result = dropWords.join(" ") === correctWords.join(" ");
+  
+  isChecked = true;
+  const mainBtn = document.getElementById("main-action-btn");
+  mainBtn.textContent = "Câu tiếp theo ➔";
+  mainBtn.style.backgroundColor = "#27ae60";
+
+  if (result) {
+    document.getElementById("result").innerHTML = "✅ <b>Chính xác!</b> Giỏi quá!";
+    document.getElementById("result").style.color = "#27ae60";
+    clearInterval(interval);
+    totalTime += timer;
+    correctCount++;
+
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#2ecc71', '#f1c40f', '#3498db', '#e74c3c']
+    });
+
+    playSentenceAudio(currentIndex);
+  } else {
+    const currentItem = sentences[currentIndex];
+    document.getElementById("result").innerHTML = `❌ <b>Chưa chính xác!</b><br>
+      <span style="color:#27ae60; font-size:0.95em; margin-top:8px; display:block;">✔ <b>Đáp án chuẩn:</b> ${currentItem.text}</span>
+      <span style="color:#8b5e3c; font-size:0.85em; margin-top:4px; display:block;">🇻🇳 <i>Nghĩa: ${currentItem.vi}</i></span>`;
+    document.getElementById("result").style.color = "#e74c3c";
+    playSentenceAudio(currentIndex); 
+  }
+}
+
+function showHint() {
+  if (isChecked) return;
+  const dropWords = Array.from(document.getElementById("drop-area").children)
+    .filter(el => !el.classList.contains("drop-empty-hint"))
+    .map(el => el.textContent);
+
+  const nextWord = correctWords[dropWords.length];
+  if (nextWord) { 
+    document.getElementById("result").innerHTML = `<span style="color:#e67e22">💡 Gợi ý từ tiếp theo: <b>${nextWord}</b></span>`;
+  } else {
+    document.getElementById("result").innerHTML = `<span style="color:#27ae60">💡 Bạn đã ghép đủ từ, hãy bấm <b>Kiểm tra</b>!</span>`;
+  }
+}
+
+function nextSentence() {
+  if (currentIndex < sentences.length - 1) {
+    currentIndex++;
+    loadSentence(currentIndex);
+  } else {
+    clearInterval(interval);
+    const avgTime = (correctCount > 0) ? (totalTime / correctCount).toFixed(1) : 0;
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("drop-area").innerHTML = "";
+    document.getElementById("word-bank").innerHTML = "";
+    document.getElementById("main-action-btn").style.display = "none";
+    document.getElementById("summary").innerHTML = `
+      <div style="background:#fff; border:3px solid #c9a77b; border-radius:16px; padding:24px; max-width:600px; margin:0 auto;">
+        🎯 <b style="font-size:1.3em; color:#8b5e3c;">HOÀN THÀNH BỘ BÀI TẬP!</b><br><br>
+        ✅ <b>Số câu đúng:</b> ${correctCount} / ${sentences.length}<br>
+        ⏱️ <b>Thời gian trung bình:</b> ${avgTime} giây/câu<br><br>
+        <button onclick="changeTopic(currentTopicKey)" style="padding:10px 24px; background:#8b5e3c; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:16px;">🔄 Luyện tập lại bộ này</button>
+      </div>`;
+  }
+}
+
+// Khởi chạy bộ bài tập mặc định ban đầu
+changeTopic('gk1_p10');
+
+// Bắt sự kiện phím bấm máy tính & bút trình chiếu Logitech R800
+window.addEventListener('keydown', function(event) {
+  if (['PageUp', 'PageDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+    event.preventDefault();
+  }
+
+  switch(event.key) {
+    case 'PageDown':
+    case 'ArrowRight':
+      checkOrNext(); 
+      break;
+      
+    case 'PageUp':
+    case 'ArrowLeft':
+      undo(); 
+      break;
+      
+    case 'b':
+    case '.':
+      showHint(); 
+      break;
+
+    case 'Escape':
+      restart(); 
+      break;
+
+    case 'v':
+    case 'V':
+      playSentenceAudio(currentIndex);
+      break;
+
+    case 's':
+    case 'S':
+      toggleSpeed();
+      break;
+  }
+});
+</script>
+</body>
+</html>
