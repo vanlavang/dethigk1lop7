@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English 7 Global Success - Vocab Pro</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --primary-hover: #004494;
+            --secondary: #f8f9fa;
+            --bg-color: #f4f7f6;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --success: #28a745;
+            --success-bg: #d4edda;
+            --danger: #dc3545;
+            --danger-bg: #f8d7da;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+            --shadow-sm: 0 .125rem .25rem rgba(0,0,0,.075);
+            --shadow-md: 0 .5rem 1rem rgba(0,0,0,.15);
+            --shadow-lg: 0 1rem 3rem rgba(0,0,0,.175);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --font-family: 'UTM Avo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="dark"] {
+            --primary: #4da3ff;
+            --primary-hover: #1a8cff;
+            --secondary: #2d333b;
+            --bg-color: #121212;
+            --text-main: #e6edf3;
+            --text-muted: #8b949e;
+            --success: #3fb950;
+            --success-bg: #2ea04333;
+            --danger: #f85149;
+            --danger-bg: #da363333;
+            --card-bg: #1c2128;
+            --border-color: #444c56;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: all var(--transition-speed);
+        }
+
+        /* Nav */
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar-brand { font-size: 1.4rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .navbar-controls { display: flex; gap: 10px; }
+        
+        .icon-btn {
+            background: var(--secondary); border: 1px solid var(--border-color); border-radius: 50%;
+            width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-main); transition: all 0.2s; font-size: 1.2rem;
+        }
+        .icon-btn:hover { background-color: var(--primary); color: white; transform: scale(1.05); }
+        .icon-btn:active { transform: scale(0.95); }
+
+        .container { width: 100%; max-width: 900px; margin: 30px auto; padding: 0 20px; flex-grow: 1; }
+
+        .screen { display: none; animation: fadeIn 0.4s ease-out; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card {
+            background-color: var(--card-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);
+            padding: 30px; margin-bottom: 20px; transition: all var(--transition-speed);
+        }
+
+        .text-center { text-align: center; }
+        .mt-3 { margin-top: 15px; } .mt-4 { margin-top: 20px; }
+        .mb-3 { margin-bottom: 15px; } .mb-4 { margin-bottom: 20px; }
+        .text-muted { color: var(--text-muted); }
+        .d-flex { display: flex; } .gap-2 { gap: 10px; }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;
+        }
+        .module-card {
+            background: var(--card-bg); border: 2px solid var(--border-color); border-radius: var(--radius-lg);
+            padding: 25px 20px; text-align: center; cursor: pointer; transition: all 0.2s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .module-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        .module-icon { font-size: 3rem; margin-bottom: 15px; }
+        .module-title { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin-bottom: 10px; }
+        .module-desc { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* Buttons & Forms */
+        .btn {
+            display: inline-block; padding: 12px 24px; font-size: 1.1rem; font-weight: bold; text-align: center;
+            border: none; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s;
+            box-shadow: var(--shadow-sm); font-family: inherit; width: 100%;
+        }
+        .btn:active { transform: scale(0.98); box-shadow: none; }
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: var(--secondary); color: var(--text-main); border: 2px solid var(--border-color); }
+        .btn-secondary:hover { background-color: #e2e6ea; }
+        @media (min-width: 600px) { .btn { width: auto; min-width: 150px; } }
+
+        .form-control {
+            width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: var(--radius-md);
+            font-size: 1rem; background-color: var(--card-bg); color: var(--text-main); transition: 0.2s;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary); }
+
+        /* Flashcards */
+        .flashcard-container { perspective: 1000px; width: 100%; height: 350px; margin-bottom: 20px; cursor: pointer; }
+        .flashcard {
+            width: 100%; height: 100%; position: relative; transition: transform 0.6s;
+            transform-style: preserve-3d; border-radius: var(--radius-lg); box-shadow: var(--shadow-md);
+        }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .flashcard-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--card-bg); border-radius: var(--radius-lg); padding: 30px; text-align: center;
+            border: 2px solid var(--primary);
+        }
+        .flashcard-back { transform: rotateY(180deg); background: var(--secondary); border-color: var(--success); }
+        .word-en { font-size: 3rem; font-weight: bold; color: var(--primary); margin-bottom: 10px; }
+        .word-ipa { font-size: 1.2rem; color: var(--text-muted); font-family: monospace; }
+        .word-pos { display: inline-block; background: var(--primary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin: 10px 0; }
+        .word-vn { font-size: 2.5rem; font-weight: bold; color: var(--success); margin-bottom: 15px; }
+        .word-ex { font-size: 1.1rem; font-style: italic; color: var(--text-main); margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px; width: 100%; }
+
+        /* Explorer List */
+        .vocab-list { display: grid; grid-template-columns: 1fr; gap: 15px; max-height: 500px; overflow-y: auto; padding-right: 10px; }
+        .vocab-item { background: var(--secondary); border-radius: var(--radius-md); padding: 15px; border-left: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .vocab-item:hover { transform: translateX(5px); background: #e9ecef; }
+        
+        /* Practice Engine Styles */
+        .practice-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 0.95rem; font-weight: bold; }
+        .progress-bar { height: 8px; background-color: var(--primary); width: 0%; transition: 0.3s; border-radius: 4px; }
+        .progress-container { width: 100%; height: 8px; background: var(--border-color); border-radius: 4px; margin-bottom: 25px; }
+        
+        .question-text { font-size: 1.5rem; font-weight: 500; margin-bottom: 25px; text-align: center; }
+        
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
+        .option-btn { padding: 15px; text-align: left; background: var(--secondary); border: 2px solid var(--border-color); border-radius: var(--radius-md); font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); transform: translateY(-2px); }
+        .option-btn.correct { background: var(--success-bg); border-color: var(--success); }
+        .option-btn.wrong { background: var(--danger-bg); border-color: var(--danger); }
+
+        /* Scramble / Tiles */
+        .tile-container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; min-height: 60px; margin-bottom: 15px; padding: 15px; border: 2px dashed var(--border-color); border-radius: var(--radius-md); }
+        .tile { background: var(--primary); color: white; padding: 10px 20px; border-radius: var(--radius-md); font-size: 1.2rem; cursor: pointer; user-select: none; font-weight: bold; box-shadow: var(--shadow-sm); }
+        .tile:hover { transform: scale(1.05); }
+
+        /* Matching */
+        .match-columns { display: flex; gap: 20px; }
+        .match-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .match-btn { padding: 12px; background: var(--secondary); border: 2px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer; text-align: center; transition: 0.2s; }
+        .match-btn.selected { border-color: var(--primary); background: #e7f1ff; }
+        .match-btn.matched { background: var(--success-bg); border-color: var(--success); opacity: 0.7; pointer-events: none; }
+
+        /* Classify */
+        .classify-buckets { display: flex; gap: 15px; margin-bottom: 20px; }
+        .bucket { flex: 1; min-height: 150px; border: 2px dashed var(--primary); border-radius: var(--radius-md); padding: 15px; display: flex; flex-direction: column; gap: 5px; align-items: center; }
+        .bucket-title { font-weight: bold; margin-bottom: 10px; text-transform: uppercase; color: var(--primary); }
+
+        /* Listen & Spell Big Audio */
+        .big-audio-btn { font-size: 4rem; background: none; border: none; cursor: pointer; margin-bottom: 20px; transition: transform 0.2s; }
+        .big-audio-btn:hover { transform: scale(1.1); }
+
+        /* Feedback Banner */
+        .feedback-banner { margin-top: 20px; padding: 15px; border-radius: var(--radius-md); display: none; animation: fadeIn 0.3s; }
+        .feedback-banner.show { display: block; }
+        .feedback-correct { background-color: var(--success-bg); border-left: 5px solid var(--success); }
+        .feedback-wrong { background-color: var(--danger-bg); border-left: 5px solid var(--danger); }
+        
+        /* Stats */
+        .stat-badge { padding: 5px 12px; border-radius: 20px; font-weight: bold; background: var(--secondary); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand" onclick="goHome()">
+            <span>📖</span> Vocab Ultimate Pro
+        </div>
+        <div class="navbar-controls">
+            <a class="icon-btn" href="index.html" title="Trang chủ English 7 Pro" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">🏠</a>
+            <a class="icon-btn" href="GRAMMAR_PRACTICE_PRO_LOP7.html" title="Luyện Ngữ pháp" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">📝</a>
+            <a class="icon-btn" href="PRONUNCIATION_PRACTICE_PRO_LOP7.html" title="Luyện Phát âm" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">🗣️</a>
+            <a class="icon-btn" href="Sentence%20Scramble.html" title="Luyện Ghép câu" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">🔀</a>
+            <button class="icon-btn" id="btnDarkMode" title="Toggle Theme">🌙</button>
+            <button class="icon-btn" id="btnAudioToggle" title="Toggle Auto-Audio">🔊</button>
+            <button class="icon-btn" id="btnFullscreen" title="Fullscreen">⛶</button>
+            <button class="icon-btn" id="btnHome" title="Home" style="display: none;" onclick="goHome()">🏠</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- SCREEN: DASHBOARD -->
+        <div id="screen-dashboard" class="screen active">
+            <div class="text-center mb-4">
+                <h1 style="color: var(--primary); font-size: 2.5rem;">Grade 7 Global Success</h1>
+                <p class="text-muted" style="font-size: 1.2rem;">Units 1 - 3 • Vocabulary Training System</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="module-card" onclick="openModule('explorer')">
+                    <div class="module-icon">🔍</div>
+                    <div class="module-title">1. Vocab Explorer</div>
+                    <div class="module-desc">Browse, search & hear words</div>
+                </div>
+                <div class="module-card" onclick="openModule('flashcard')">
+                    <div class="module-icon">🎴</div>
+                    <div class="module-title">2. Flashcard Master</div>
+                    <div class="module-desc">Memorize with smart cards</div>
+                </div>
+                <div class="module-card" onclick="openModule('practice')">
+                    <div class="module-icon">🏋️‍♂️</div>
+                    <div class="module-title">3. Vocab Practice</div>
+                    <div class="module-desc">12 diverse exercise types</div>
+                </div>
+                <div class="module-card" onclick="openModule('listen-spell')">
+                    <div class="module-icon">🎧</div>
+                    <div class="module-title">4. Listen & Spell</div>
+                    <div class="module-desc">Train your ears & typing</div>
+                </div>
+                <div class="module-card" onclick="openModule('mini-test')">
+                    <div class="module-icon">⏱️</div>
+                    <div class="module-title">5. Mini Test</div>
+                    <div class="module-desc">Quick timed assessments</div>
+                </div>
+                <div class="module-card" onclick="openModule('final-test')">
+                    <div class="module-icon">🏆</div>
+                    <div class="module-title">6. Final Test</div>
+                    <div class="module-desc">Comprehensive Unit review</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN: EXPLORER -->
+        <div id="screen-explorer" class="screen">
+            <div class="card">
+                <h2 class="mb-3" style="color: var(--primary)">Vocabulary Explorer</h2>
+                <div class="d-flex gap-2 mb-3">
+                    <select id="expUnit" class="form-control" onchange="renderExplorer()">
+                        <option value="all">All Units</option>
+                        <option value="1">Unit 1: Hobbies</option>
+                        <option value="2">Unit 2: Healthy Living</option>
+                        <option value="3">Unit 3: Community Service</option>
+                    </select>
+                    <input type="text" id="expSearch" class="form-control" placeholder="Search word..." onkeyup="renderExplorer()">
+                </div>
+                <div class="vocab-list" id="explorerList"></div>
+            </div>
+        </div>
+
+        <!-- SCREEN: FLASHCARD -->
+        <div id="screen-flashcard" class="screen">
+            <div class="card">
+                <div class="practice-header">
+                    <span id="fcProgress">Card 1/10</span>
+                    <select id="fcUnit" class="form-control" style="width: auto; padding: 5px;" onchange="startFlashcards()">
+                        <option value="all">All Units</option>
+                        <option value="1">Unit 1</option>
+                        <option value="2">Unit 2</option>
+                        <option value="3">Unit 3</option>
+                    </select>
+                </div>
+                
+                <div class="flashcard-container" onclick="document.getElementById('fcCard').classList.toggle('flipped')">
+                    <div class="flashcard" id="fcCard">
+                        <div class="flashcard-face">
+                            <div class="word-en" id="fcEn">word</div>
+                            <div class="word-ipa" id="fcIpa">/wɜːd/</div>
+                            <span class="word-pos" id="fcPos">n</span>
+                            <button class="btn btn-secondary mt-3" style="width:auto; padding: 5px 15px;" onclick="event.stopPropagation(); playAudio(document.getElementById('fcEn').innerText)">🔊 Listen</button>
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            <div class="word-vn" id="fcVn">từ vựng</div>
+                            <div class="word-ex" id="fcEx">Example sentence.</div>
+                            <div class="text-muted mt-2" id="fcExVn">Ví dụ tiếng Việt.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex gap-2 justify-content-center mt-4">
+                    <button class="btn btn-secondary" onclick="fcPrev()">⬅ Prev</button>
+                    <button class="btn btn-primary" onclick="fcNext()">Next ➡</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN: PRACTICE SETUP -->
+        <div id="screen-practice-setup" class="screen">
+            <div class="card text-center">
+                <h2 id="setupTitle" class="mb-3" style="color: var(--primary)">Setup Practice</h2>
+                
+                <div class="mb-3 text-left" style="text-align: left;">
+                    <label class="font-weight-bold">Select Unit:</label>
+                    <select id="psUnit" class="form-control mt-2">
+                        <option value="all">All Units (1-3)</option>
+                        <option value="1">Unit 1: Hobbies</option>
+                        <option value="2">Unit 2: Healthy Living</option>
+                        <option value="3">Unit 3: Community Service</option>
+                    </select>
+                </div>
+
+                <div class="mb-3 text-left" style="text-align: left;" id="psCountContainer">
+                    <label class="font-weight-bold">Number of Questions:</label>
+                    <select id="psCount" class="form-control mt-2">
+                        <option value="10">10 Questions</option>
+                        <option value="15">15 Questions</option>
+                        <option value="20">20 Questions</option>
+                        <option value="30">30 Questions</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary mt-4" style="padding: 15px; font-size: 1.2rem;" onclick="startEngine()">Start Now 🚀</button>
+            </div>
+        </div>
+
+        <!-- SCREEN: MAIN ENGINE (Practice/Test) -->
+        <div id="screen-engine" class="screen">
+            <div class="card">
+                <div class="practice-header">
+                    <span class="stat-badge" id="engTypeBadge">Exercise</span>
+                    <span id="engTimerDisplay" style="display:none;">⏱ <span id="engTimer">00:00</span></span>
+                    <div>
+                        <span style="color: var(--success); margin-right: 10px;">✔ <span id="engCorrect">0</span></span>
+                        <span style="color: var(--danger);">✖ <span id="engWrong">0</span></span>
+                    </div>
+                </div>
+                
+                <div class="text-center text-muted mb-2" id="engProgressText">Question 1/10</div>
+                <div class="progress-container"><div class="progress-bar" id="engProgressBar"></div></div>
+
+                <div id="engQuestionText" class="question-text">Question here</div>
+                
+                <!-- Dynamic Area for 12 types -->
+                <div id="engInteractArea" style="min-height: 200px;"></div>
+
+                <div class="feedback-banner" id="engFeedback">
+                    <h3 id="engFbTitle"></h3>
+                    <p id="engFbDesc"></p>
+                </div>
+
+                <div class="mt-4" id="engNextContainer" style="display: none;">
+                    <button class="btn btn-primary" id="btnEngNext" onclick="engineNext()">Next ➡</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN: RESULTS -->
+        <div id="screen-results" class="screen">
+            <div class="card text-center">
+                <h2 style="color: var(--primary); font-size: 2rem;">Completion Report</h2>
+                
+                <div style="width: 150px; height: 150px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold; margin: 20px auto; box-shadow: var(--shadow-md);" id="resScoreText">
+                    100%
+                </div>
+                
+                <h3><span id="resCorrect">10</span> / <span id="resTotal">10</span> Correct</h3>
+                <p class="text-muted mt-2" id="resTimeContainer">Time taken: <span id="resTime">00:00</span></p>
+
+                <div class="d-flex gap-2 justify-content-center mt-4">
+                    <button class="btn btn-secondary" id="btnRetry" style="display:none;" onclick="retryWrong()">Retry Incorrect</button>
+                    <button class="btn btn-primary" onclick="goHome()">Back to Dashboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. VOCABULARY DATABASE (Global Success Grade 7 - Units 1, 2, 3) ---
+        const VOCAB_DB = [
+            // UNIT 1: HOBBIES
+            { id: 'u1_1', unit: 1, en: 'collect', vn: 'sưu tầm', ipa: '/kəˈlekt/', pos: 'v', exEn: 'I like to collect stamps from different countries.', exVn: 'Tôi thích sưu tầm tem từ các quốc gia khác nhau.', emoji: '📥' },
+            { id: 'u1_2', unit: 1, en: 'model', vn: 'mô hình', ipa: '/ˈmɒdl/', pos: 'n', exEn: 'He is making a model aeroplane.', exVn: 'Anh ấy đang làm một mô hình máy bay.', emoji: '✈️' },
+            { id: 'u1_3', unit: 1, en: 'gardening', vn: 'việc làm vườn', ipa: '/ˈɡɑːdnɪŋ/', pos: 'n', exEn: 'Gardening is a relaxing hobby.', exVn: 'Làm vườn là một sở thích thư giãn.', emoji: '🌱' },
+            { id: 'u1_4', unit: 1, en: 'skate', vn: 'trượt patin', ipa: '/skeɪt/', pos: 'v', exEn: 'They skate in the park every weekend.', exVn: 'Họ trượt patin trong công viên mỗi cuối tuần.', emoji: '🛼' },
+            { id: 'u1_5', unit: 1, en: 'board game', vn: 'trò chơi cờ bàn', ipa: '/bɔːd ɡeɪm/', pos: 'n', exEn: 'We play a board game on Friday nights.', exVn: 'Chúng tôi chơi cờ bàn vào tối thứ Sáu.', emoji: '🎲' },
+            { id: 'u1_6', unit: 1, en: 'doll', vn: 'búp bê', ipa: '/dɒl/', pos: 'n', exEn: 'My sister has a large collection of dolls.', exVn: 'Em gái tôi có một bộ sưu tập búp bê lớn.', emoji: '🎎' },
+            { id: 'u1_7', unit: 1, en: 'coin', vn: 'tiền xu', ipa: '/kɔɪn/', pos: 'n', exEn: 'He found a rare coin.', exVn: 'Anh ấy tìm thấy một đồng xu hiếm.', emoji: '🪙' },
+            { id: 'u1_8', unit: 1, en: 'jog', vn: 'chạy bộ', ipa: '/dʒɒɡ/', pos: 'v', exEn: 'I usually jog in the morning.', exVn: 'Tôi thường chạy bộ vào buổi sáng.', emoji: '🏃' },
+            { id: 'u1_9', unit: 1, en: 'surf', vn: 'lướt ván', ipa: '/sɜːf/', pos: 'v', exEn: 'They surf at the beach in summer.', exVn: 'Họ lướt ván ở bãi biển vào mùa hè.', emoji: '🏄' },
+            { id: 'u1_10', unit: 1, en: 'creative', vn: 'sáng tạo', ipa: '/kriˈeɪtɪv/', pos: 'adj', exEn: 'Painting requires a creative mind.', exVn: 'Vẽ tranh đòi hỏi một bộ óc sáng tạo.', emoji: '🎨' },
+            
+            // UNIT 2: HEALTHY LIVING
+            { id: 'u2_1', unit: 2, en: 'diet', vn: 'chế độ ăn uống', ipa: '/ˈdaɪət/', pos: 'n', exEn: 'You should have a balanced diet.', exVn: 'Bạn nên có một chế độ ăn uống cân bằng.', emoji: '🥗' },
+            { id: 'u2_2', unit: 2, en: 'exercise', vn: 'tập thể dục', ipa: '/ˈeksəsaɪz/', pos: 'v', exEn: 'We need to exercise regularly to stay fit.', exVn: 'Chúng ta cần tập thể dục thường xuyên để giữ dáng.', emoji: '🏋️' },
+            { id: 'u2_3', unit: 2, en: 'vegetarian', vn: 'người ăn chay', ipa: '/ˌvedʒəˈteəriən/', pos: 'n', exEn: 'My brother is a vegetarian.', exVn: 'Anh trai tôi là một người ăn chay.', emoji: '🥦' },
+            { id: 'u2_4', unit: 2, en: 'sunburn', vn: 'sự cháy nắng', ipa: '/ˈsʌnbɜːn/', pos: 'n', exEn: 'Wear sunscreen to avoid sunburn.', exVn: 'Bôi kem chống nắng để tránh cháy nắng.', emoji: '🥵' },
+            { id: 'u2_5', unit: 2, en: 'spot', vn: 'mụn', ipa: '/spɒt/', pos: 'n', exEn: 'Wash your face regularly to prevent spots.', exVn: 'Rửa mặt thường xuyên để ngăn ngừa mụn.', emoji: '👱‍♀️' },
+            { id: 'u2_6', unit: 2, en: 'put on weight', vn: 'tăng cân', ipa: '/pʊt ɒn weɪt/', pos: 'v', exEn: 'Eating too much fast food makes you put on weight.', exVn: 'Ăn quá nhiều đồ ăn nhanh khiến bạn tăng cân.', emoji: '⚖️' },
+            { id: 'u2_7', unit: 2, en: 'allergy', vn: 'sự dị ứng', ipa: '/ˈælədʒi/', pos: 'n', exEn: 'She has a nut allergy.', exVn: 'Cô ấy bị dị ứng hạt.', emoji: '🤧' },
+            { id: 'u2_8', unit: 2, en: 'sickness', vn: 'sự ốm yếu', ipa: '/ˈsɪknəs/', pos: 'n', exEn: 'Proper hygiene prevents sickness.', exVn: 'Vệ sinh đúng cách ngăn ngừa bệnh tật.', emoji: '🤒' },
+            { id: 'u2_9', unit: 2, en: 'health', vn: 'sức khỏe', ipa: '/helθ/', pos: 'n', exEn: 'Health is more important than money.', exVn: 'Sức khỏe quan trọng hơn tiền bạc.', emoji: '❤️' },
+            { id: 'u2_10', unit: 2, en: 'calorie', vn: 'calo', ipa: '/ˈkæləri/', pos: 'n', exEn: 'Running burns a lot of calories.', exVn: 'Chạy bộ đốt cháy nhiều calo.', emoji: '🔥' },
+
+            // UNIT 3: COMMUNITY SERVICE
+            { id: 'u3_1', unit: 3, en: 'volunteer', vn: 'tình nguyện viên', ipa: '/ˌvɒlənˈtɪə(r)/', pos: 'n', exEn: 'She works as a volunteer at the hospital.', exVn: 'Cô ấy làm tình nguyện viên tại bệnh viện.', emoji: '🙋' },
+            { id: 'u3_2', unit: 3, en: 'donate', vn: 'quyên góp', ipa: '/dəʊˈneɪt/', pos: 'v', exEn: 'Many people donate blood to save lives.', exVn: 'Nhiều người hiến máu để cứu sống người khác.', emoji: '🩸' },
+            { id: 'u3_3', unit: 3, en: 'homeless', vn: 'vô gia cư', ipa: '/ˈhəʊmləs/', pos: 'adj', exEn: 'They provide free meals for homeless people.', exVn: 'Họ cung cấp bữa ăn miễn phí cho người vô gia cư.', emoji: '⛺' },
+            { id: 'u3_4', unit: 3, en: 'community', vn: 'cộng đồng', ipa: '/kəˈmjuːnəti/', pos: 'n', exEn: 'We should protect our local community.', exVn: 'Chúng ta nên bảo vệ cộng đồng địa phương.', emoji: '🏘️' },
+            { id: 'u3_5', unit: 3, en: 'nursing home', vn: 'viện dưỡng lão', ipa: '/ˈnɜːsɪŋ həʊm/', pos: 'n', exEn: 'Students visit the nursing home every month.', exVn: 'Học sinh đến thăm viện dưỡng lão mỗi tháng.', emoji: '👴' },
+            { id: 'u3_6', unit: 3, en: 'tutor', vn: 'dạy kèm', ipa: '/ˈtjuːtə(r)/', pos: 'v', exEn: 'I tutor primary students in maths.', exVn: 'Tôi dạy kèm toán cho học sinh tiểu học.', emoji: '👨‍🏫' },
+            { id: 'u3_7', unit: 3, en: 'plant', vn: 'trồng cây', ipa: '/plɑːnt/', pos: 'v', exEn: 'We will plant more trees in the park.', exVn: 'Chúng tôi sẽ trồng thêm cây trong công viên.', emoji: '🌳' },
+            { id: 'u3_8', unit: 3, en: 'clean up', vn: 'dọn dẹp', ipa: '/kliːn ʌp/', pos: 'v', exEn: 'Let’s clean up the street this weekend.', exVn: 'Hãy dọn dẹp đường phố cuối tuần này.', emoji: '🧹' },
+            { id: 'u3_9', unit: 3, en: 'exchange', vn: 'trao đổi', ipa: '/ɪksˈtʃeɪndʒ/', pos: 'v', exEn: 'They exchange old paper for notebooks.', exVn: 'Họ đổi giấy vụn lấy vở.', emoji: '🔄' },
+            { id: 'u3_10', unit: 3, en: 'benefit', vn: 'lợi ích', ipa: '/ˈbenɪfɪt/', pos: 'n', exEn: 'Reading books brings many benefits.', exVn: 'Đọc sách mang lại nhiều lợi ích.', emoji: '📈' }
+        ];
+
+        // --- 2. APP STATE & UTILS ---
+        let appState = {
+            theme: 'light',
+            audioOn: true,
+            currentModule: 'dashboard',
+            
+            // Engine State
+            mode: '', // practice, listen-spell, mini-test, final-test
+            activeQs: [],
+            wrongQs: [],
+            qIndex: 0,
+            correct: 0,
+            wrong: 0,
+            timerInterval: null,
+            timeElapsed: 0,
+            isAnswered: false,
+
+            // Flashcard State
+            fcList: [],
+            fcIndex: 0
+        };
+
+        const els = {
+            screens: document.querySelectorAll('.screen'),
+            btnAudio: document.getElementById('btnAudioToggle'),
+            btnTheme: document.getElementById('btnDarkMode'),
+            btnHome: document.getElementById('btnHome'),
+        };
+
+        function init() {
+            // Load LocalStorage
+            if(localStorage.getItem('egs_theme') === 'dark') toggleTheme(true);
+            if(localStorage.getItem('egs_audio') === 'false') toggleAudio(false);
+
+            // Global Key Listener for Remote
+            document.addEventListener('keydown', handleGlobalKey);
+        }
+
+        function showScreen(id) {
+            els.screens.forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            els.btnHome.style.display = id === 'screen-dashboard' ? 'none' : 'block';
+            clearInterval(appState.timerInterval); // Stop timers if leaving
+        }
+
+        function goHome() {
+            showScreen('screen-dashboard');
+            appState.currentModule = 'dashboard';
+            speechSynthesis.cancel();
+        }
+
+        function toggleTheme(forceDark = null) {
+            const isDark = forceDark !== null ? forceDark : document.documentElement.getAttribute('data-theme') !== 'dark';
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                els.btnTheme.innerText = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                els.btnTheme.innerText = '🌙';
+            }
+            localStorage.setItem('egs_theme', isDark ? 'dark' : 'light');
+        }
+
+        function toggleAudio(forceOn = null) {
+            appState.audioOn = forceOn !== null ? forceOn : !appState.audioOn;
+            els.btnAudio.innerText = appState.audioOn ? '🔊' : '🔇';
+            els.btnAudio.style.color = appState.audioOn ? '' : 'var(--danger)';
+            localStorage.setItem('egs_audio', appState.audioOn);
+        }
+
+        function playAudio(text, rate = 1.0) {
+            if (!appState.audioOn || !('speechSynthesis' in window)) return;
+            speechSynthesis.cancel();
+            let u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US';
+            u.rate = rate;
+            speechSynthesis.speak(u);
+        }
+
+        function playBeep(type) {
+            if (!appState.audioOn) return;
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            
+            if (type === 'correct') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(600, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            } else {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            }
+            osc.start(); osc.stop(ctx.currentTime + 0.3);
+        }
+
+        function shuffle(arr) {
+            let a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+        
+        function formatTime(sec) {
+            return `${Math.floor(sec/60).toString().padStart(2,'0')}:${(sec%60).toString().padStart(2,'0')}`;
+        }
+
+        function handleGlobalKey(e) {
+            // Ignore if in input
+            if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+            
+            // F for Fullscreen
+            if (e.key.toLowerCase() === 'f') {
+                if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+                else document.exitFullscreen();
+                return;
+            }
+
+            if (appState.currentModule === 'flashcard') {
+                if (['ArrowRight','PageDown'].includes(e.key)) fcNext();
+                if (['ArrowLeft','PageUp'].includes(e.key)) fcPrev();
+                if (['Enter',' '].includes(e.key)) { e.preventDefault(); document.getElementById('fcCard').classList.toggle('flipped'); }
+            } else if (['practice','listen-spell','mini-test','final-test'].includes(appState.currentModule)) {
+                if (appState.isAnswered && ['ArrowRight','PageDown','Enter',' '].includes(e.key)) {
+                    e.preventDefault(); engineNext();
+                } else if (!appState.isAnswered && ['1','2','3','4'].includes(e.key)) {
+                    // Quick select for MC
+                    const btns = document.querySelectorAll('.option-btn');
+                    const idx = parseInt(e.key)-1;
+                    if (btns[idx]) btns[idx].click();
+                }
+            }
+        }
+
+        // --- 3. MODULE ROUTING ---
+        function openModule(mod) {
+            appState.currentModule = mod;
+            if (mod === 'explorer') { showScreen('screen-explorer'); renderExplorer(); }
+            else if (mod === 'flashcard') { showScreen('screen-flashcard'); document.getElementById('fcUnit').value='all'; startFlashcards(); }
+            else if (mod === 'practice') { openSetup('Practice Mode (12 Types)', 'practice'); }
+            else if (mod === 'listen-spell') { openSetup('Listen & Spell', 'listen-spell'); }
+            else if (mod === 'mini-test') { openSetup('Mini Test (Timed)', 'mini-test'); }
+            else if (mod === 'final-test') { openSetup('Final Vocabulary Test', 'final-test'); document.getElementById('psCountContainer').style.display='none'; }
+        }
+
+        // --- 4. MODULE 1: EXPLORER ---
+        function renderExplorer() {
+            const unit = document.getElementById('expUnit').value;
+            const search = document.getElementById('expSearch').value.toLowerCase();
+            const list = document.getElementById('explorerList');
+            
+            let filtered = VOCAB_DB.filter(w => 
+                (unit === 'all' || w.unit == unit) &&
+                (w.en.toLowerCase().includes(search) || w.vn.toLowerCase().includes(search))
+            );
+
+            list.innerHTML = filtered.map(w => `
+                <div class="vocab-item" onclick="playAudio('${w.en.replace(/'/g,"\\'")}')">
+                    <div>
+                        <strong style="font-size:1.2rem; color:var(--primary)">${w.en}</strong> 
+                        <span class="text-muted">(${w.pos})</span> 
+                        <span style="font-family:monospace">${w.ipa}</span>
+                        <br><span style="color:var(--success)">${w.vn}</span>
+                    </div>
+                    <div style="font-size:1.5rem">🔊</div>
+                </div>
+            `).join('') || '<div class="text-center text-muted p-4">No words found.</div>';
+        }
+
+        // --- 5. MODULE 2: FLASHCARD ---
+        function startFlashcards() {
+            const unit = document.getElementById('fcUnit').value;
+            appState.fcList = shuffle(unit === 'all' ? VOCAB_DB : VOCAB_DB.filter(w => w.unit == unit));
+            appState.fcIndex = 0;
+            renderFc();
+        }
+        function renderFc() {
+            if(appState.fcList.length === 0) return;
+            const w = appState.fcList[appState.fcIndex];
+            document.getElementById('fcEn').innerText = w.en;
+            document.getElementById('fcIpa').innerText = w.ipa;
+            document.getElementById('fcPos').innerText = w.pos;
+            document.getElementById('fcVn').innerText = w.vn;
+            document.getElementById('fcEx').innerText = w.exEn;
+            document.getElementById('fcExVn').innerText = w.exVn;
+            document.getElementById('fcProgress').innerText = `Card ${appState.fcIndex + 1}/${appState.fcList.length}`;
+            document.getElementById('fcCard').classList.remove('flipped');
+        }
+        function fcNext() { if(appState.fcIndex < appState.fcList.length - 1) { appState.fcIndex++; renderFc(); } }
+        function fcPrev() { if(appState.fcIndex > 0) { appState.fcIndex--; renderFc(); } }
+
+
+        // --- 6. MODULES 3,4,5,6: UNIVERSAL ENGINE ---
+        function openSetup(title, mode) {
+            appState.mode = mode;
+            document.getElementById('setupTitle').innerText = title;
+            document.getElementById('psCountContainer').style.display = mode === 'final-test' ? 'none' : 'block';
+            showScreen('screen-practice-setup');
+        }
+
+        function startEngine() {
+            const unit = document.getElementById('psUnit').value;
+            const count = parseInt(document.getElementById('psCount').value);
+            
+            let source = unit === 'all' ? VOCAB_DB : VOCAB_DB.filter(w => w.unit == unit);
+            if(source.length < 5) return alert("Not enough words in this unit!");
+
+            let questions = [];
+            
+            if (appState.mode === 'listen-spell') {
+                questions = generateQuestions(source, count, ['spell']);
+            } else if (appState.mode === 'practice') {
+                // 12 distinct types
+                const types = ['mc-ev', 'mc-ve', 'listen-choose', 'picture', 'spell', 'missing', 'scramble', 'match-ev', 'match-ex', 'fib', 'classify'];
+                questions = generateQuestions(source, count, types);
+            } else if (appState.mode === 'mini-test') {
+                questions = generateQuestions(source, count, ['mc-ev', 'mc-ve', 'fib', 'listen-choose']);
+            } else if (appState.mode === 'final-test') {
+                questions = generateQuestions(source, source.length, ['mc-ev', 'mc-ve', 'spell', 'fib', 'missing']); 
+            }
+
+            initEngineRun(questions);
+        }
+
+        function retryWrong() {
+            if(appState.wrongQs.length === 0) return;
+            initEngineRun([...appState.wrongQs]);
+        }
+
+        function initEngineRun(questions) {
+            appState.activeQs = shuffle(questions);
+            appState.wrongQs = [];
+            appState.qIndex = 0;
+            appState.correct = 0;
+            appState.wrong = 0;
+            appState.timeElapsed = 0;
+            
+            document.getElementById('engCorrect').innerText = '0';
+            document.getElementById('engWrong').innerText = '0';
+            
+            const showTimer = ['mini-test', 'final-test'].includes(appState.mode);
+            document.getElementById('engTimerDisplay').style.display = showTimer ? 'inline' : 'none';
+            if (showTimer) {
+                document.getElementById('engTimer').innerText = '00:00';
+                clearInterval(appState.timerInterval);
+                appState.timerInterval = setInterval(() => {
+                    appState.timeElapsed++;
+                    document.getElementById('engTimer').innerText = formatTime(appState.timeElapsed);
+                }, 1000);
+            }
+
+            showScreen('screen-engine');
+            renderEngineQ();
+        }
+
+        // --- QUESTION GENERATOR ---
+        function generateQuestions(source, maxCount, allowedTypes) {
+            let qs = [];
+            let pool = shuffle([...source]);
+            
+            for(let i=0; i < Math.min(maxCount, pool.length); i++) {
+                const w = pool[i];
+                const type = allowedTypes[Math.floor(Math.random() * allowedTypes.length)];
+                
+                let q = { type, wordObj: w, qText: '', answer: '', options: [] };
+
+                // Get 3 distractors
+                let dists = source.filter(x => x.id !== w.id);
+                dists = shuffle(dists).slice(0, 3);
+
+                if (type === 'mc-ev') {
+                    q.qText = `What is the meaning of "<span style="color:var(--primary)">${w.en}</span>"?`;
+                    q.answer = w.vn;
+                    q.options = shuffle([w.vn, ...dists.map(d=>d.vn)]);
+                } 
+                else if (type === 'mc-ve') {
+                    q.qText = `How do you say "<span style="color:var(--success)">${w.vn}</span>"?`;
+                    q.answer = w.en;
+                    q.options = shuffle([w.en, ...dists.map(d=>d.en)]);
+                }
+                else if (type === 'listen-choose') {
+                    q.qText = `Listen and choose the correct word:`;
+                    q.answer = w.en;
+                    q.options = shuffle([w.en, ...dists.map(d=>d.en)]);
+                    q.audioTarget = w.en;
+                }
+                else if (type === 'picture') {
+                    q.qText = `What does this represent?<br><span style="font-size:4rem">${w.emoji}</span>`;
+                    q.answer = w.en;
+                    q.options = shuffle([w.en, ...dists.map(d=>d.en)]);
+                }
+                else if (type === 'spell') {
+                    if(appState.mode === 'listen-spell') q.qText = `Type the word you hear:`;
+                    else q.qText = `Type the English word for "<span style="color:var(--success)">${w.vn}</span>"`;
+                    q.answer = w.en.toLowerCase();
+                    q.audioTarget = w.en;
+                }
+                else if (type === 'missing') {
+                    let chars = w.en.split('');
+                    let mCount = Math.max(1, Math.floor(chars.length / 3));
+                    while(mCount > 0) {
+                        let idx = Math.floor(Math.random()*chars.length);
+                        if(chars[idx] !== '_' && chars[idx] !== ' ') { chars[idx] = '_'; mCount--; }
+                    }
+                    q.qText = `Fill in the missing letters: <br><span style="letter-spacing:5px; font-size:2rem; font-family:monospace; color:var(--primary)">${chars.join('')}</span> <br><small class="text-muted">(${w.vn})</small>`;
+                    q.answer = w.en.toLowerCase();
+                }
+                else if (type === 'scramble') {
+                    q.qText = `Unscramble the letters to make the word for "<span style="color:var(--success)">${w.vn}</span>"`;
+                    q.answer = w.en.toLowerCase();
+                    q.letters = shuffle(w.en.replace(/\s/g,'').split(''));
+                }
+                else if (type === 'match-ev' || type === 'match-ex') {
+                    q.qText = type==='match-ev' ? "Match the English words with Vietnamese meanings:" : "Match the words with their examples:";
+                    let group = [w, ...dists].slice(0, 4); // 4 pairs
+                    q.pairs = group.map(g => ({
+                        left: g.en, 
+                        right: type==='match-ev' ? g.vn : g.exEn.replace(new RegExp(g.en, 'ig'), '___')
+                    }));
+                    // Store answer as stringified correct mapping to validate
+                    q.answer = "matched"; 
+                }
+                else if (type === 'fib') {
+                    let ex = w.exEn;
+                    // regex to replace word ignoring case
+                    let blanked = ex.replace(new RegExp(`\\b${w.en}\\b`, 'i'), '_____');
+                    // if regex failed (e.g. plural), just simple fallback
+                    if (blanked === ex) blanked = ex.replace(w.en, '_____'); 
+                    
+                    q.qText = `Complete the sentence:<br><br><em>"${blanked}"</em>`;
+                    q.answer = w.en;
+                    q.options = shuffle([w.en, ...dists.map(d=>d.en)]);
+                }
+                else if (type === 'classify') {
+                    q.qText = `Classify the words into the correct parts of speech:`;
+                    q.answer = "classified";
+                    // Find 2 POS from DB
+                    let verbs = source.filter(x=>x.pos==='v').slice(0,3);
+                    let nouns = source.filter(x=>x.pos==='n').slice(0,3);
+                    if(verbs.length < 2 || nouns.length < 2) { 
+                        // fallback to MC if not enough DB diversity
+                        return generateQuestions([w], 1, ['mc-ev'])[0]; 
+                    }
+                    q.buckets = ['Verb (v)', 'Noun (n)'];
+                    q.items = shuffle([...verbs, ...nouns]).map(x => ({ word: x.en, correct: x.pos==='v' ? 0 : 1 }));
+                }
+
+                qs.push(q);
+            }
+            return qs;
+        }
+
+        // --- ENGINE RENDERER ---
+        function renderEngineQ() {
+            appState.isAnswered = false;
+            const q = appState.activeQs[appState.qIndex];
+            
+            // UI Reset
+            document.getElementById('engFeedback').className = 'feedback-banner';
+            document.getElementById('engNextContainer').style.display = 'none';
+            document.getElementById('engInteractArea').innerHTML = '';
+            
+            // Header
+            document.getElementById('engProgressText').innerText = `Question ${appState.qIndex + 1}/${appState.activeQs.length}`;
+            document.getElementById('engProgressBar').style.width = `${(appState.qIndex / appState.activeQs.length) * 100}%`;
+            
+            const typeLabels = {
+                'mc-ev': 'Eng ➡ VN', 'mc-ve': 'VN ➡ Eng', 'listen-choose': 'Listen & Choose', 'picture': 'Picture Word',
+                'spell': 'Spelling', 'missing': 'Missing Letters', 'scramble': 'Scramble', 'match-ev': 'Matching',
+                'match-ex': 'Match Sentence', 'fib': 'Fill in Blanks', 'classify': 'Classify'
+            };
+            document.getElementById('engTypeBadge').innerText = typeLabels[q.type] || 'Practice';
+            document.getElementById('engQuestionText').innerHTML = q.qText;
+
+            // Audio Autoplay
+            if(q.audioTarget && appState.audioOn) {
+                setTimeout(()=> playAudio(q.audioTarget), 300);
+            }
+
+            // Render Interaction Area based on type
+            const area = document.getElementById('engInteractArea');
+
+            if (['mc-ev', 'mc-ve', 'picture', 'fib'].includes(q.type)) {
+                const grid = document.createElement('div'); grid.className = 'options-grid';
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button'); btn.className = 'option-btn'; btn.innerHTML = opt;
+                    btn.onclick = () => evalAnswer(opt === q.answer, opt);
+                    grid.appendChild(btn);
+                });
+                area.appendChild(grid);
+            }
+            
+            else if (q.type === 'listen-choose') {
+                const btnAudio = document.createElement('button'); btnAudio.className = 'big-audio-btn'; btnAudio.innerHTML = '🔊';
+                btnAudio.onclick = () => playAudio(q.audioTarget);
+                area.appendChild(btnAudio);
+                area.style.textAlign = 'center';
+
+                const grid = document.createElement('div'); grid.className = 'options-grid';
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button'); btn.className = 'option-btn'; btn.innerHTML = opt;
+                    btn.onclick = () => evalAnswer(opt === q.answer, opt);
+                    grid.appendChild(btn);
+                });
+                area.appendChild(grid);
+            }
+
+            else if (['spell', 'missing'].includes(q.type)) {
+                if(q.type === 'spell' && q.audioTarget) {
+                    const btnAudio = document.createElement('button'); btnAudio.className = 'big-audio-btn'; btnAudio.innerHTML = '🔊';
+                    btnAudio.onclick = () => playAudio(q.audioTarget);
+                    area.appendChild(btnAudio); area.style.textAlign = 'center';
+                }
+                const inp = document.createElement('input'); inp.type = 'text'; inp.className = 'form-control'; 
+                inp.placeholder = 'Type here...'; inp.autocomplete = 'off';
+                
+                const btn = document.createElement('button'); btn.className = 'btn btn-primary mt-3'; btn.innerText = 'Check';
+                btn.onclick = () => evalAnswer(inp.value.trim().toLowerCase() === q.answer, inp.value.trim());
+                inp.onkeypress = (e) => { if(e.key==='Enter') btn.click(); };
+                
+                area.appendChild(inp); area.appendChild(btn);
+                setTimeout(()=>inp.focus(), 100);
+            }
+
+            else if (q.type === 'scramble') {
+                let currentWord = [];
+                let remaining = [...q.letters];
+
+                const ansBox = document.createElement('div'); ansBox.className = 'tile-container'; ansBox.style.borderColor = 'var(--success)'; ansBox.style.background = 'var(--success-bg)';
+                const poolBox = document.createElement('div'); poolBox.className = 'tile-container';
+                const btn = document.createElement('button'); btn.className = 'btn btn-primary mt-3 w-100'; btn.innerText = 'Check';
+                btn.onclick = () => evalAnswer(currentWord.join('').toLowerCase() === q.answer, currentWord.join(''));
+
+                const renderTiles = () => {
+                    ansBox.innerHTML = ''; poolBox.innerHTML = '';
+                    currentWord.forEach((l, i) => {
+                        let t = document.createElement('span'); t.className = 'tile'; t.innerText = l;
+                        t.onclick = () => { remaining.push(l); currentWord.splice(i,1); renderTiles(); };
+                        ansBox.appendChild(t);
+                    });
+                    remaining.forEach((l, i) => {
+                        let t = document.createElement('span'); t.className = 'tile'; t.innerText = l;
+                        t.onclick = () => { currentWord.push(l); remaining.splice(i,1); renderTiles(); };
+                        poolBox.appendChild(t);
+                    });
+                };
+                renderTiles();
+                area.appendChild(ansBox); area.appendChild(poolBox); area.appendChild(btn);
+            }
+
+            else if (['match-ev', 'match-ex'].includes(q.type)) {
+                let lefts = shuffle(q.pairs.map(p=>p.left));
+                let rights = shuffle(q.pairs.map(p=>p.right));
+                let selectedLeft = null;
+                let matchedPairs = 0;
+
+                const cols = document.createElement('div'); cols.className = 'match-columns';
+                const colL = document.createElement('div'); colL.className = 'match-col';
+                const colR = document.createElement('div'); colR.className = 'match-col';
+                
+                lefts.forEach(l => {
+                    let b = document.createElement('div'); b.className = 'match-btn left-btn'; b.innerText = l; b.dataset.val = l;
+                    b.onclick = () => {
+                        if(b.classList.contains('matched')) return;
+                        colL.querySelectorAll('.left-btn').forEach(x=>x.classList.remove('selected'));
+                        b.classList.add('selected'); selectedLeft = l;
+                    };
+                    colL.appendChild(b);
+                });
+                
+                rights.forEach(r => {
+                    let b = document.createElement('div'); b.className = 'match-btn right-btn'; b.innerText = r; b.dataset.val = r;
+                    b.onclick = () => {
+                        if(b.classList.contains('matched') || !selectedLeft) return;
+                        // check if valid pair
+                        const correctPair = q.pairs.find(p => p.left === selectedLeft && p.right === r);
+                        if(correctPair) {
+                            b.classList.add('matched');
+                            colL.querySelector(`.left-btn[data-val="${selectedLeft}"]`).classList.add('matched');
+                            colL.querySelector(`.left-btn[data-val="${selectedLeft}"]`).classList.remove('selected');
+                            playBeep('correct');
+                            selectedLeft = null;
+                            matchedPairs++;
+                            if(matchedPairs === q.pairs.length) evalAnswer(true, "All matched");
+                        } else {
+                            playBeep('wrong');
+                            b.style.borderColor = 'var(--danger)';
+                            setTimeout(()=> b.style.borderColor = '', 300);
+                        }
+                    };
+                    colR.appendChild(b);
+                });
+                cols.appendChild(colL); cols.appendChild(colR); area.appendChild(cols);
+            }
+
+            else if (q.type === 'classify') {
+                const buckets = document.createElement('div'); buckets.className = 'classify-buckets';
+                const pool = document.createElement('div'); pool.className = 'tile-container';
+                
+                let selectedWord = null;
+                let correctCount = 0;
+
+                q.buckets.forEach((bName, bIdx) => {
+                    let b = document.createElement('div'); b.className = 'bucket';
+                    b.innerHTML = `<div class="bucket-title">${bName}</div>`;
+                    b.onclick = () => {
+                        if(!selectedWord) return;
+                        if(selectedWord.correct === bIdx) {
+                            let t = document.createElement('span'); t.className = 'tile'; t.innerText = selectedWord.word;
+                            t.style.background = 'var(--success)';
+                            b.appendChild(t);
+                            selectedWord.node.remove();
+                            selectedWord = null;
+                            correctCount++;
+                            playBeep('correct');
+                            if(correctCount === q.items.length) evalAnswer(true, "Classified");
+                        } else {
+                            playBeep('wrong');
+                            b.style.borderColor = 'var(--danger)';
+                            setTimeout(()=> b.style.borderColor = 'var(--primary)', 300);
+                        }
+                    };
+                    buckets.appendChild(b);
+                });
+
+                q.items.forEach(item => {
+                    let t = document.createElement('span'); t.className = 'tile'; t.innerText = item.word;
+                    t.onclick = () => {
+                        pool.querySelectorAll('.tile').forEach(x=>x.style.transform = 'scale(1)');
+                        t.style.transform = 'scale(1.1) translateY(-5px)';
+                        selectedWord = { ...item, node: t };
+                    };
+                    pool.appendChild(t);
+                });
+
+                area.appendChild(buckets); area.appendChild(pool);
+            }
+        }
+
+        // --- ENGINE EVALUATION ---
+        function evalAnswer(isCorrect, userVal) {
+            if(appState.isAnswered) return;
+            appState.isAnswered = true;
+
+            const q = appState.activeQs[appState.qIndex];
+
+            // Lock UI
+            document.querySelectorAll('#engInteractArea button, #engInteractArea input').forEach(e => e.disabled = true);
+
+            // Highlight buttons for MC
+            if (['mc-ev', 'mc-ve', 'picture', 'listen-choose', 'fib'].includes(q.type)) {
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    if (btn.innerText === q.answer) btn.classList.add('correct');
+                    else if (btn.innerText === userVal && !isCorrect) btn.classList.add('wrong');
+                });
+            }
+
+            if (isCorrect) {
+                appState.correct++;
+                document.getElementById('engCorrect').innerText = appState.correct;
+                playBeep('correct');
+            } else {
+                appState.wrong++;
+                document.getElementById('engWrong').innerText = appState.wrong;
+                appState.wrongQs.push({...q, userVal});
+                playBeep('wrong');
+            }
+
+            // Feedback Banner
+            const fb = document.getElementById('engFeedback');
+            fb.className = `feedback-banner show ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}`;
+            document.getElementById('engFbTitle').innerText = isCorrect ? '🎉 Correct!' : '❌ Incorrect';
+            
+            let desc = '';
+            if (!isCorrect && !['match-ev', 'match-ex', 'classify'].includes(q.type)) {
+                desc += `Correct answer: <strong>${q.answer}</strong><br>`;
+            }
+            if (q.wordObj.exEn) desc += `<em>Ex: ${q.wordObj.exEn}</em>`;
+            document.getElementById('engFbDesc').innerHTML = desc;
+
+            document.getElementById('engNextContainer').style.display = 'block';
+            document.getElementById('btnEngNext').focus();
+        }
+
+        function engineNext() {
+            if(!appState.isAnswered) return;
+            appState.qIndex++;
+            if(appState.qIndex >= appState.activeQs.length) {
+                finishEngine();
+            } else {
+                renderEngineQ();
+            }
+        }
+
+        function finishEngine() {
+            clearInterval(appState.timerInterval);
+            document.getElementById('engProgressBar').style.width = '100%';
+            
+            const total = appState.activeQs.length;
+            const perc = Math.round((appState.correct / total) * 100);
+            
+            document.getElementById('resScoreText').innerText = perc + '%';
+            document.getElementById('resCorrect').innerText = appState.correct;
+            document.getElementById('resTotal').innerText = total;
+            document.getElementById('resTime').innerText = formatTime(appState.timeElapsed);
+            
+            document.getElementById('btnRetry').style.display = appState.wrongQs.length > 0 ? 'inline-block' : 'none';
+            
+            showScreen('screen-results');
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
